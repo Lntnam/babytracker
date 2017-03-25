@@ -1,5 +1,9 @@
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/eb65e6ab-55d5-4b2f-9417-f20e75c6d646/mini.png)](https://insight.sensiolabs.com/projects/eb65e6ab-55d5-4b2f-9417-f20e75c6d646)
 
+[![Latest Stable Version](https://poser.pugx.org/lntn/babytracker/v/stable)](https://packagist.org/packages/lntn/babytracker)
+[![Total Downloads](https://poser.pugx.org/lntn/babytracker/downloads)](https://packagist.org/packages/lntn/babytracker)
+[![License](https://poser.pugx.org/lntn/babytracker/license)](https://packagist.org/packages/lntn/babytracker)
+
 ## About Project
 
 This is a web tool to keep track of your baby's:
