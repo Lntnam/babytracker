@@ -1,7 +1,22 @@
 {
     "name": "lntn/babytracker",
     "description": "Baby Tracker Web Tool",
-    "keywords": ["baby", "laravel"],
+    "keywords": ["baby", "laravel", "website"],
+    "authors": [
+        {
+            "name": "Le Nguyen Trung Nam",
+            "email": "me@namle.info",
+            "homepage": "http://www.namle.info",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "email": "me@namle.info",
+        "issues": "https://github.com/lntn/esport-website/issues",
+        "wiki": "https://github.com/lntn/esport-website/wiki",
+        "source": "https://github.com/lntn/esport-website",
+        "docs": "https://github.com/lntn/esport-website/wiki"
+    },
     "license": "GPL-3.0",
     "type": "web",
     "require": {
