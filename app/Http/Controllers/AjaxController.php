@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Sleep;
 use App\Repositories\MealRepository;
 use App\Repositories\NotificationRepository;
 use App\Repositories\SleepRepository;

@@ -8,10 +8,8 @@
 
 namespace App\Repositories;
 
-
 use App\Models\Sleep;
 use Carbon\Carbon;
-use Carbon\CarbonInterval;
 
 class SleepRepository
 {

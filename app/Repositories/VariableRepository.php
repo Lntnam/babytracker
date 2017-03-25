@@ -58,7 +58,6 @@ class VariableRepository
     }
 
     public static function clearCurrentValues() {
-        // self::setCurrentValue('weight', 0);
         self::setCurrentValue('sleep_time', 0);
         self::setCurrentValue('meal', 0);
     }

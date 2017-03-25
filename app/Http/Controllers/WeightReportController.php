@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Repositories\WeightRepository;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 
 class WeightReportController extends Controller
 {

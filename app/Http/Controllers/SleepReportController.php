@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Repositories\DayRecordRepository;
 use App\Repositories\SleepRepository;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 
 class SleepReportController extends Controller
 {

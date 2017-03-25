@@ -9,7 +9,6 @@
 namespace App\Repositories;
 
 use App\Models\DayRecord;
-use App\Models\Weight;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -38,7 +37,7 @@ class WeightRepository
      * @param Carbon $to
      * @return mixed
      */
-    public static function getAverageWeight($from, $to) {
+    public static function getAverageWeight(Carbon $from, Carbon $to) {
         return DayRecord::whereBetween('day', [$from->toDateString(), $to->toDateString()])
             ->avg('weight');
     }
@@ -48,7 +47,7 @@ class WeightRepository
      * @param Carbon $to
      * @return mixed
      */
-    public static function getMinMaxWeight($from, $to) {
+    public static function getMinMaxWeight(Carbon $from, Carbon $to) {
         return DayRecord::whereBetween('day', [$from->toDateString(), $to->toDateString()])
             ->select(DB::raw('min(weight) min_w, max(weight) max_w'))
             ->first();

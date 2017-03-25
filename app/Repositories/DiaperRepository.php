@@ -12,6 +12,6 @@ namespace App\Repositories;
 class DiaperRepository
 {
     public static function getPeeCount() {
-        $date = Carbon::now()->toDateString();
+        //
     }
 }

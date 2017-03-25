@@ -10,7 +10,6 @@ use App\Repositories\VariableRepository;
 use App\Repositories\WeightRepository;
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
-use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
