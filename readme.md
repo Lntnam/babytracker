@@ -12,6 +12,10 @@ Reports are provided.
 
 Laravel 5.4 requirements
 
+## Setup
+- Follow standard Laravel setup (i.e. migration, seed, env...)
+- Create config/settings.php from settings.example.php file
+
 ## License
 
 This software is provided open-sourced under the [GNU GPL-3.0](https://opensource.org/licenses/GPL-3.0) license.
