@@ -8,11 +8,14 @@ This is a web tool to keep track of your baby's:
 
 Reports are provided.
 
+**This web tool is best viewed on mobile devices**
+
 ## Requirements
 
 Laravel 5.4 requirements
 
 ## Setup
+
 - Follow standard Laravel setup (i.e. migration, seed, env...)
 - Create config/settings.php from settings.example.php file
 
