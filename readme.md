@@ -1,3 +1,5 @@
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/eb65e6ab-55d5-4b2f-9417-f20e75c6d646/mini.png)](https://insight.sensiolabs.com/projects/eb65e6ab-55d5-4b2f-9417-f20e75c6d646)
+
 ## About Project
 
 This is a web tool to keep track of your baby's:
