@@ -102,8 +102,10 @@
             </button>
         </div>
         <div class="col-6">
-            <a href="{{ route('CloseDay') }}" class="btn btn-danger btn-block"><i class="fa fa-hourglass-end"
-                                                                                  aria-hidden="true"></i> End Day</a>
+            <button type="button" id="end-day-button" class="btn btn-danger btn-block" data-toggle="modal"
+                    data-target="#endDayModal"><i class="fa fa-hourglass-end"
+                                                  aria-hidden="true"></i> End Day
+            </button>
         </div>
     </div>
 
@@ -230,6 +232,29 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm End Day Modal -->
+    <div class="modal fade" id="endDayModal" tabindex="-1" role="dialog" aria-labelledby="End Day" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="endDayModalLabel">Are you sure to end the day?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-danger">This action is not reversible. You should only end the day when it's passed
+                        mid-night.</p>
+                    <p class="text-danger">Do you still want to end the day?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No! Abort!</button>
+                    <a href="{{ route('CloseDay') }}" class="btn btn-danger">Yes! End the day!</a>
                 </div>
             </div>
         </div>
