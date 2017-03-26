@@ -71,7 +71,7 @@
     <!-- ################## -->
     <!-- Time Average -->
     <div class="main-info">
-        <h4>10 Days Time Average</h4>
+        <h4>10 Days Median</h4>
     </div>
 
     <div class="row">
@@ -79,7 +79,7 @@
         <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl-3">
             <div class="row report-cell">
                 <div class="col-6"><strong>{{ $k }}</strong></div>
-                <div class="col-6">{{ array_sum($v) / count($v)  }}ml</div>
+                <div class="col-6">{{ \App\Utilities::findArrayMedian($v)  }}ml</div>
             </div>
         </div>
         @endforeach
