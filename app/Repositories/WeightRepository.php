@@ -15,15 +15,18 @@ use Illuminate\Support\Facades\DB;
 
 class WeightRepository
 {
-    public static function getCurrentWeight() {
+    public static function getCurrentWeight()
+    {
         return VariableRepository::getCurrentValueByKey('weight');
     }
 
-    public static function setCurrentWeight($value) {
+    public static function setCurrentWeight($value)
+    {
         return VariableRepository::setCurrentValue('weight', (float)$value);
     }
 
-    public static function getYesterdayWeight() {
+    public static function getYesterdayWeight()
+    {
         $record = DayRecordRepository::getDayRecord(Carbon::today()->subDay()->toDateString());
 
         if ($record) {
@@ -37,7 +40,8 @@ class WeightRepository
      * @param Carbon $to
      * @return mixed
      */
-    public static function getAverageWeight(Carbon $from, Carbon $to) {
+    public static function getAverageWeight(Carbon $from, Carbon $to)
+    {
         return DayRecord::whereBetween('day', [$from->toDateString(), $to->toDateString()])
             ->avg('weight');
     }
@@ -47,9 +51,11 @@ class WeightRepository
      * @param Carbon $to
      * @return mixed
      */
-    public static function getMinMaxWeight(Carbon $from, Carbon $to) {
-        return DayRecord::whereBetween('day', [$from->toDateString(), $to->toDateString()])
+    public static function getMinMaxWeight(Carbon $from, Carbon $to)
+    {
+        $result = DayRecord::whereBetween('day', [$from->toDateString(), $to->toDateString()])
             ->select(DB::raw('min(weight) min_w, max(weight) max_w'))
             ->first();
+        return $result;
     }
 }

@@ -31,10 +31,10 @@ class WeightReportController extends Controller
         }
 
         // increment analysis
-        $three_days = WeightRepository::getMinMaxWeight(Carbon::today(), Carbon::today()->subDay(2));
-        $seven_days = WeightRepository::getMinMaxWeight(Carbon::today(), Carbon::today()->subDay(6));
-        $fourteen_days = WeightRepository::getMinMaxWeight(Carbon::today(), Carbon::today()->subDay(13));
-        $thirty_days = WeightRepository::getMinMaxWeight(Carbon::today(), Carbon::today()->subDay(29));
+        $three_days = WeightRepository::getMinMaxWeight(Carbon::today()->subDay(2), Carbon::today());
+        $seven_days = WeightRepository::getMinMaxWeight(Carbon::today()->subDay(6), Carbon::today());
+        $fourteen_days = WeightRepository::getMinMaxWeight(Carbon::today()->subDay(13), Carbon::today());
+        $thirty_days = WeightRepository::getMinMaxWeight(Carbon::today()->subDay(29), Carbon::today());
         $increment_analysis = [
             '3D' => ($three_days->max_w - $three_days->min_w) / 3,
             '7D' => ($seven_days->max_w - $seven_days->min_w) / 7,
