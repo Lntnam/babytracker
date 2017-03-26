@@ -107,6 +107,7 @@ class SleepReportController extends Controller
     }
 
     private function getArrayMedian($array) {
+        sort($array);
         $posA = floor(count($array) / 2);
         $posB = ceil(count($array) / 2);
         return ($array[$posA] + $array[$posB]) / 2;
