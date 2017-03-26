@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Repositories\DayRecordRepository;
 use App\Repositories\SleepRepository;
+use App\Utilities;
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
 
@@ -73,8 +74,8 @@ class SleepReportController extends Controller
 
         // analysis calculation
         foreach ($analysis_by_block as $key => $data) {
-            $analysis_by_block[$key]['sleep_median'] = CarbonInterval::minutes(round($this->getArrayMedian($analysis_by_block[$key]['sleep_list'])));
-            $analysis_by_block[$key]['awake_median'] = CarbonInterval::minutes(round($this->getArrayMedian($analysis_by_block[$key]['awake_list'])));
+            $analysis_by_block[$key]['sleep_median'] = CarbonInterval::minutes(round(Utilities::findArrayMedian($analysis_by_block[$key]['sleep_list'])));
+            $analysis_by_block[$key]['awake_median'] = CarbonInterval::minutes(round(Utilities::findArrayMedian($analysis_by_block[$key]['awake_list'])));
         }
 
         return view('sleep', [
@@ -104,12 +105,5 @@ class SleepReportController extends Controller
             }
         }
         return null;
-    }
-
-    private function getArrayMedian($array) {
-        sort($array);
-        $posA = floor(count($array) / 2);
-        $posB = ceil(count($array) / 2);
-        return ($array[$posA] + $array[$posB]) / 2;
     }
 }
