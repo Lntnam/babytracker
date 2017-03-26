@@ -80,7 +80,12 @@ class SleepRepository
         }
     }
 
-    public static function getPastRecords($quantity) {
-        return Sleep::orderBy('on', 'desc')->take($quantity)->get();
+    public static function getPastRecords($no_of_days) {
+        $date = Carbon::today()->subDay($no_of_days-1);
+        return Sleep::where('on', '>=', $date->toDateString())
+            ->whereNotNull('wake')
+            ->orderBy('on', 'asc')
+            ->orderBy('sleep', 'asc')
+            ->get();
     }
 }
