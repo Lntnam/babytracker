@@ -56,7 +56,11 @@ class MealRepository
         return Meal::where('on', $date)->orderBy('at', 'asc')->get();
     }
 
-    public static function getPastRecords($quantity) {
-        return Meal::orderBy('on', 'desc')->take($quantity)->get();
+    public static function getPastRecords($no_of_days) {
+        $date = Carbon::today()->subDay($no_of_days-1);
+        return Meal::where('on', '>=', $date->toDateString())
+            ->orderBy('on', 'asc')
+            ->orderBy('at', 'asc')
+            ->get();
     }
 }
