@@ -59,7 +59,7 @@ class SleepReportController extends Controller
             $analysis_by_block[$sleep_breakdown[0][0]]['sleep_list'][] = $sleep_duration;
 
             // Awake
-            if ($awake_time != null) {
+            if ($awake_time !== null) {
                 $awake_duration = $awake_time->diffInMinutes($start);
                 $total_awake += $awake_duration;
 
