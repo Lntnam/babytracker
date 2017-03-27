@@ -68,7 +68,7 @@
         <div class="col-6">
             <h4><label id="sleep-value">{{ $sleep->hours . 'h ' . $sleep->minutes . 'm' }}</label></h4>
             @if (!empty($sleeping_record))
-                sleep from <label id="sleep-from">{{ (new Carbon($sleeping_record->sleep))->format('H:i') }}</label>
+                sleeping from <label id="sleep-from">{{ (new Carbon($sleeping_record->sleep))->format('H:i') }}</label>
             @endif
         </div>
         <div class="col-4">
