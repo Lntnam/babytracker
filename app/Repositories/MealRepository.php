@@ -37,8 +37,10 @@ class MealRepository
             ['at', $datetime->toTimeString()]
         ])->first();
 
-        if (empty($meal))
+        if (empty($meal)) {
             $meal = new Meal();
+            $meal->on = $datetime->toDateString();
+        }
 
         $meal->at = $at;
         $meal->value = $value;
