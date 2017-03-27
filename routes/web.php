@@ -23,6 +23,8 @@ Route::post('ajax/add_meal', 'AjaxController@addMeal')->name('Ajax.AddMeal');
 
 Route::post('ajax/toggle_sleep', 'AjaxController@toggleSleep')->name('Ajax.ToggleSleep');
 
+Route::post('ajax/cancel_sleep', 'AjaxController@cancelSleep')->name('Ajax.CancelSleep');
+
 Route::get('/meal', 'MealReportController@index')->name('MealReport');
 
 Route::get('/weight', 'WeightReportController@index')->name('WeightReport');

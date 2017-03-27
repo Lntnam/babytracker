@@ -103,4 +103,12 @@ class SleepRepository
             ->orderBy('sleep', 'desc')
             ->first();
     }
+
+    public static function deleteCurrentSleeping() {
+        $sleep = Sleep::whereNull('wake')
+            ->orderBy('id', 'desc')
+            ->first();
+
+        if ($sleep) $sleep->delete();
+    }
 }

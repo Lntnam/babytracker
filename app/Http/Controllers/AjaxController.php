@@ -63,4 +63,8 @@ class AjaxController extends Controller
             return $interval->hours . 'h ' . $interval->minutes . 'm';
         }
     }
+
+    public function cancelSleep() {
+        SleepRepository::deleteCurrentSleeping();
+    }
 }

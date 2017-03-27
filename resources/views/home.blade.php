@@ -78,6 +78,9 @@
                     data-toggle="modal" data-target="#{{ $sleeping ? 'wakeUp' : 'addSleep' }}Modal">
                 {{ $sleeping ? 'wake up' : 'sleep' }}
             </button>
+            @if ($sleeping)
+                <button id="cancel-sleep-button" type="button" class="btn btn-danger btn-block">cancel</button>
+            @endif
         </div>
     </div>
 
@@ -313,5 +316,12 @@
         };
         $('#addSleepModal').find('button.btn-primary').on('click', sleepClick);
         $('#wakeUpModal').find('button.btn-primary').on('click', sleepClick);
+        $('#cancel-sleep-button').on('click', function() {
+            $(this).append('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>')
+            $(this).off('click');
+            $.post("{{ route('Ajax.CancelSleep') }}", {}, function () {
+                location.reload();
+            });
+        })
     </script>
 @endsection
