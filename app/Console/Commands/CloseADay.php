@@ -40,8 +40,6 @@ class CloseADay extends Command
      */
     public function handle()
     {
-        SleepRepository::splitSleep();
-        DayRecordRepository::createDayRecord();
-        VariableRepository::clearCurrentValues();
+        DayRecordRepository::closeToday();
     }
 }
