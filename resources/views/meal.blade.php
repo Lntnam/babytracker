@@ -78,8 +78,8 @@
         @foreach ($meals_by_time as $k => $v)
         <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl-3">
             <div class="row report-cell">
-                <div class="col-6"><strong>{{ $k }}</strong></div>
-                <div class="col-6">{{ \App\Utilities::findArrayMedian($v)  }}ml</div>
+                <div class="col-7"><strong>{{ $k }} hrs</strong></div>
+                <div class="col-5">{{ \App\Utilities::findArrayMedian($v)  }}ml</div>
             </div>
         </div>
         @endforeach
@@ -122,7 +122,8 @@
             var options = {
                 curveType: 'function',
                 legend: {position: 'none'},
-                vAxis: {title: 'ml'}
+                vAxis: {title: 'ml'},
+                hAxis: {title: 'hours'}
             };
 
             var ten_day_chart = new google.visualization.LineChart(document.getElementById('ten-day-chart'));
