@@ -40,7 +40,7 @@ class HomeController extends Controller
         $sleeping_record = SleepRepository::getCurrentSleepingRecord();
 
         // Last sleep
-        // $last_sleep = SleepRepository::
+        $last_sleep = SleepRepository::getLatestSleep();
 
         return view('home', [
             'notifications' => $notifications,
@@ -52,7 +52,8 @@ class HomeController extends Controller
             'sleeping' => $sleeping,
             'sleeping_record' => $sleeping_record,
             'last_weight' => $yesterdayWeight,
-            'last_meal' => $lastMeal
+            'last_meal' => $lastMeal,
+            'last_sleep' => $last_sleep
         ]);
     }
 

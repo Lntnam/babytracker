@@ -69,6 +69,8 @@
             <h4><label id="sleep-value">{{ $sleep->hours . 'h ' . $sleep->minutes . 'm' }}</label></h4>
             @if (!empty($sleeping_record))
                 sleeping from <label id="sleep-from">{{ (new Carbon($sleeping_record->sleep))->format('H:i') }}</label>
+            @elseif (!empty($last_sleep))
+                last wake up @ {{ (new Carbon($last_sleep->wake))->format('H:i') }}
             @endif
         </div>
         <div class="col-4">

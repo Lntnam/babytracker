@@ -96,4 +96,11 @@ class SleepRepository
             ->orderBy('sleep', 'asc')
             ->get();
     }
+
+    public static function getLatestSleep() {
+        return Sleep::whereNotNull('wake')
+            ->orderBy('on', 'desc')
+            ->orderBy('sleep', 'desc')
+            ->first();
+    }
 }
