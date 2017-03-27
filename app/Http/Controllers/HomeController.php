@@ -20,8 +20,8 @@ class HomeController extends Controller
 
         // Current values
         $weight = WeightRepository::getCurrentWeight();
-        $meal = MealRepository::getCurrentMeal();
-        $sleep = SleepRepository::getCurrentSleep();
+        $meal = MealRepository::getTodayTotalMealAmount();
+        $sleep = SleepRepository::getTodayTotalSleepAmount();
         $sleep = CarbonInterval::hours(floor($sleep / 60))->minute($sleep % 60);
         $sleeping = SleepRepository::isSleeping();
         $name = config('settings.baby_name');
@@ -37,7 +37,10 @@ class HomeController extends Controller
         $lastMeal = MealRepository::getLastMealTime();
 
         // Sleep from
-        $sleeping_record = SleepRepository::getSleepingRecord();
+        $sleeping_record = SleepRepository::getCurrentSleepingRecord();
+
+        // Last sleep
+        // $last_sleep = SleepRepository::
 
         return view('home', [
             'notifications' => $notifications,
@@ -54,7 +57,7 @@ class HomeController extends Controller
     }
 
     public function close() {
-        SleepRepository::endSleep();
+        SleepRepository::splitSleep();
         $day_record = DayRecordRepository::createDayRecord();
         VariableRepository::clearCurrentValues();
 
@@ -67,7 +70,7 @@ class HomeController extends Controller
         // check weight
         $min_weight_inc = VariableRepository::getExpectationByKey('gram_per_day');
         $day_count = ceil(100 / $min_weight_inc);
-        $records = DayRecordRepository::getLatestDayRecords($day_count);
+        $records = DayRecordRepository::getPastRecords($day_count);
         $min_weight = 0;
         $max_weight = 0;
         foreach ($records as $r) {

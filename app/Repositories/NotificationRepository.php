@@ -12,13 +12,15 @@ use App\Models\Notification;
 
 class NotificationRepository
 {
-    public static function getAllUnread() {
+    public static function getAllUnread()
+    {
         return Notification::where([['is_read', false]])
             ->orderBy('created_at', 'desc')
             ->get();
     }
 
-    public static function closeNotification($id) {
+    public static function closeNotification($id)
+    {
         $n = Notification::find($id);
         if ($n) {
             $n->is_read = 1;
@@ -27,7 +29,8 @@ class NotificationRepository
         return $n;
     }
 
-    public static function createNotification($type, $title, $message) {
+    public static function createNotification($type, $title, $message)
+    {
         $n = new Notification();
         $n->title = $title;
         $n->type = $type;

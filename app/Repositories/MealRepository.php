@@ -14,15 +14,18 @@ use Carbon\Carbon;
 
 class MealRepository
 {
-    public static function getCurrentMeal() {
+    public static function getTodayTotalMealAmount()
+    {
         return VariableRepository::getCurrentValueByKey('meal');
     }
 
-    public static function setCurrentMeal($value) {
+    public static function setTodayTotalMeanAmount($value)
+    {
         VariableRepository::setCurrentValue('meal', (float)$value);
     }
 
-    public static function addMeal($value, $full, $at) {
+    public static function addMeal($value, $full, $at)
+    {
         $meal = new Meal();
         $meal->at = $at;
         $date = Carbon::now();
@@ -38,7 +41,8 @@ class MealRepository
         $meal->save();
     }
 
-    public static function getLastMealTime() {
+    public static function getLastMealTime()
+    {
         $meal = Meal::orderBy('on', 'desc')
             ->orderBy('at', 'desc')
             ->first();
@@ -52,12 +56,14 @@ class MealRepository
         return null;
     }
 
-    public static function getMeals($date) {
+    public static function getMealsOnDate($date)
+    {
         return Meal::where('on', $date)->orderBy('at', 'asc')->get();
     }
 
-    public static function getPastRecords($no_of_days) {
-        $date = Carbon::today()->subDay($no_of_days-1);
+    public static function getPastRecords($no_of_days)
+    {
+        $date = Carbon::today()->subDay($no_of_days - 1);
         return Meal::where('on', '>=', $date->toDateString())
             ->orderBy('on', 'asc')
             ->orderBy('at', 'asc')

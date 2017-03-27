@@ -19,8 +19,8 @@ class DayRecordRepository
         $date = Carbon::now()->subDay()->toDateString();
 
         $weight = WeightRepository::getCurrentWeight();
-        $meal = MealRepository::getCurrentMeal();
-        $sleep = SleepRepository::getCurrentSleep();
+        $meal = MealRepository::getTodayTotalMealAmount();
+        $sleep = SleepRepository::getTodayTotalSleepAmount();
         $poop = 0;
         $pee = 0;
 
@@ -41,15 +41,8 @@ class DayRecordRepository
         return DayRecord::where('day', $date)->first();
     }
 
-    public static function getLatestDayRecords($quantity)
+    public static function getPastRecords($no_of_days)
     {
-        return DayRecord::orderBy('day', 'desc')
-            ->take($quantity)
-            ->get();
-    }
-
-    public static function getPastRecords($quantity)
-    {
-        return DayRecord::orderBy('day', 'desc')->take($quantity)->get();
+        return DayRecord::orderBy('day', 'desc')->take($no_of_days)->get();
     }
 }

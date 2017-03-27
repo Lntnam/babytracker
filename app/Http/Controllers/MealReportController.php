@@ -11,8 +11,8 @@ class MealReportController extends Controller
     public function index() {
 
         // Today vs Yesterday
-        $today_meals = MealRepository::getMeals(Carbon::today()->toDateString());
-        $yesterday_meals =MealRepository::getMeals(Carbon::today()->subDay()->toDateString());
+        $today_meals = MealRepository::getMealsOnDate(Carbon::today()->toDateString());
+        $yesterday_meals =MealRepository::getMealsOnDate(Carbon::today()->subDay()->toDateString());
 
         // Past 10 days
         $records = DayRecordRepository::getPastRecords(10);

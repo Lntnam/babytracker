@@ -12,7 +12,8 @@ use App\Models\Variable;
 
 class VariableRepository
 {
-    public static function getExpectationByKey($key) {
+    public static function getExpectationByKey($key)
+    {
         $var = Variable::where([['name', 'expectations']])
             ->first();
         if (!empty($var)) {
@@ -22,7 +23,8 @@ class VariableRepository
         return null;
     }
 
-    public static function getCurrentValueByKey($key) {
+    public static function getCurrentValueByKey($key)
+    {
         $var = Variable::where([['name', 'currents']])
             ->first();
         if (!empty($var)) {
@@ -33,7 +35,8 @@ class VariableRepository
         return null;
     }
 
-    public static function setExpectation($key, $value) {
+    public static function setExpectation($key, $value)
+    {
         $var = Variable::where([['name', 'expectations']])
             ->first();
         if (!empty($var)) {
@@ -44,7 +47,8 @@ class VariableRepository
         }
     }
 
-    public static function setCurrentValue($key, $value) {
+    public static function setCurrentValue($key, $value)
+    {
         $var = Variable::where([['name', 'currents']])
             ->first();
 
@@ -57,7 +61,8 @@ class VariableRepository
         return false;
     }
 
-    public static function clearCurrentValues() {
+    public static function clearCurrentValues()
+    {
         self::setCurrentValue('sleep_time', 0);
         self::setCurrentValue('meal', 0);
     }
