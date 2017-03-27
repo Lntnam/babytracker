@@ -87,11 +87,11 @@
         </div>
         <div class="col-4">
             <a href="{!! route('WeightReport') !!}" class="btn btn-info btn-block"><i class="fa fa-line-chart"
-                                                                                      aria-hidden="true"></i>Weight</a>
+                                                                                      aria-hidden="true"></i> Weight</a>
         </div>
         <div class="col-4">
             <a href="{!! route('SleepReport') !!}" class="btn btn-info btn-block"><i class="fa fa-line-chart"
-                                                                                     aria-hidden="true"></i>Sleeps</a>
+                                                                                     aria-hidden="true"></i> Sleeps</a>
         </div>
     </div>
 
