@@ -6,7 +6,6 @@ use App\Repositories\DayRecordRepository;
 use App\Repositories\MealRepository;
 use App\Repositories\NotificationRepository;
 use App\Repositories\SleepRepository;
-use App\Repositories\VariableRepository;
 use App\Repositories\WeightRepository;
 use Carbon\Carbon;
 use Carbon\CarbonInterval;

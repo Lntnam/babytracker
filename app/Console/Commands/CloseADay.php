@@ -3,8 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Repositories\DayRecordRepository;
-use App\Repositories\SleepRepository;
-use App\Repositories\VariableRepository;
 use Illuminate\Console\Command;
 
 class CloseADay extends Command
