@@ -24,17 +24,23 @@ class MealRepository
         VariableRepository::setCurrentValue('meal', (float)$value);
     }
 
-    public static function addMeal($value, $full, $at)
+    public static function addUpdateMeal($value, $full, $at)
     {
-        $meal = new Meal();
-        $meal->at = $at;
-        $date = Carbon::now();
-        $time = new Carbon($at);
-        if ($time->greaterThan($date)) {
-            $date = $date->subDay(1);
+        $datetime = new Carbon($at);
+        if ($datetime->greaterThan(Carbon::now())) {
+            $datetime->subDay();
         }
 
-        $meal->on = $date->toDateString();
+        // find if meal exists
+        $meal = Meal::where([
+            ['on', $datetime->toDateString()],
+            ['at', $datetime->toTimeString()]
+        ])->first();
+
+        if (empty($meal))
+            $meal = new Meal();
+
+        $meal->at = $at;
         $meal->value = $value;
         $meal->is_full = $full;
 

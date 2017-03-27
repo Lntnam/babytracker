@@ -32,12 +32,16 @@ class AjaxController extends Controller
         $full = $request->input('full');
         $at = $request->input('at');
 
-        $currentMeal = MealRepository::getTodayTotalMealAmount();
-        $currentMeal += $value;
-        MealRepository::setTodayTotalMeanAmount($currentMeal);
+        MealRepository::addUpdateMeal($value, $full, $at);
 
-        MealRepository::addMeal($value, $full, $at);
-        return $currentMeal;
+        $today_meals = MealRepository::getMealsOnDate(Carbon::today()->toDateString());
+        $today_amount = 0;
+        foreach ($today_meals as $meal) {
+            $today_amount += $meal->value;
+        }
+        MealRepository::setTodayTotalMeanAmount($today_amount);
+
+        return $today_amount;
     }
 
     public function toggleSleep(Request $request) {
