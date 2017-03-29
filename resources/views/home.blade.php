@@ -167,21 +167,6 @@
                             <div class="input-group-addon">ml</div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="sr-only">Full?</label>
-                        <label class="custom-control custom-radio">
-                            <input id="meal-full-yes" name="is_full" value="true" type="radio"
-                                   class="custom-control-input" checked="checked">
-                            <span class="custom-control-indicator"></span>
-                            <span class="custom-control-description">Full</span>
-                        </label>
-                        <label class="custom-control custom-radio">
-                            <input id="meal-full-no" name="is_full" value="false" type="radio"
-                                   class="custom-control-input">
-                            <span class="custom-control-indicator"></span>
-                            <span class="custom-control-description">Not full</span>
-                        </label>
-                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -296,7 +281,6 @@
             $(this).off('click');
             $.post("{{ route('Ajax.AddMeal') }}", {
                 value: $('#meal-input').val(),
-                full: $('#meal-full-yes').prop("checked", true) ? 1 : 0,
                 at: $('#meal-time-input').val()
             }, function () {
                 location.reload();

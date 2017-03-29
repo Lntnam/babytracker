@@ -19,7 +19,7 @@
                 </thead>
                 <tbody>
                 @foreach ($today_meals as $meal)
-                    <tr {!! !$meal->is_full ? 'class="table-warning"' : '' !!}>
+                    <tr>
                         <th scope="row">{{ (new Carbon($meal->at))->format('H:i') }}</th>
                         <td>{{  $meal->value }}ml</td>
                     </tr>
@@ -36,7 +36,7 @@
                 </thead>
                 <tbody>
                 @foreach ($yesterday_meals as $meal)
-                    <tr {!! !$meal->is_full ? 'class="table-warning"' : '' !!}>
+                    <tr>
                         <th scope="row">{{ (new Carbon($meal->at))->format('H:i') }}</th>
                         <td>{{ $meal->value }}ml</td>
                     </tr>

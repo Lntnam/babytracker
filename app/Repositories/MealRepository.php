@@ -24,7 +24,7 @@ class MealRepository
         VariableRepository::setCurrentValue('meal', (float)$value);
     }
 
-    public static function addUpdateMeal($value, $full, $at)
+    public static function addUpdateMeal($value, $at)
     {
         $datetime = new Carbon($at);
         if ($datetime->greaterThan(Carbon::now())) {
@@ -44,7 +44,6 @@ class MealRepository
 
         $meal->at = $at;
         $meal->value = $value;
-        $meal->is_full = $full;
 
         $meal->save();
     }
