@@ -162,10 +162,25 @@
                     <div class="form-group">
                         <label for="meal-input" class="sr-only">ml</label>
                         <div class="input-group">
-                            <input class="form-control" type="text" value="{{ $meal }}" id="meal-input"
+                            <input class="form-control" type="text" value="" id="meal-input"
                                    placeholder="Amount in ml">
                             <div class="input-group-addon">ml</div>
                         </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="sr-only">Feeding Type</label>
+                        <label class="custom-control custom-radio">
+                            <input id="bottle-fed" name="feed_type" value="bottle" type="radio"
+                                   class="custom-control-input" checked="checked">
+                            <span class="custom-control-indicator"></span>
+                            <span class="custom-control-description">Bottle</span>
+                        </label>
+                        <label class="custom-control custom-radio">
+                            <input id="breast-fed" name="feed_type" value="breast" type="radio"
+                                   class="custom-control-input">
+                            <span class="custom-control-indicator"></span>
+                            <span class="custom-control-description">Breast</span>
+                        </label>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -281,6 +296,7 @@
             $(this).off('click');
             $.post("{{ route('Ajax.AddMeal') }}", {
                 value: $('#meal-input').val(),
+                type: $('#bottle-fed').prop("checked") ? $('#bottle-fed').attr('value') : $('#breast-fed').attr('value'),
                 at: $('#meal-time-input').val()
             }, function () {
                 location.reload();

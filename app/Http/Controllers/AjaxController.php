@@ -29,10 +29,10 @@ class AjaxController extends Controller
 
     public function addMeal(Request $request) {
         $value = $request->input('value');
-        $full = $request->input('full');
+        $type = $request->input('type');
         $at = $request->input('at');
 
-        MealRepository::addUpdateMeal($value, $full, $at);
+        MealRepository::addUpdateMeal($value, $at, $type);
 
         $today_meals = MealRepository::getMealsOnDate(Carbon::today()->toDateString());
         $today_amount = 0;
