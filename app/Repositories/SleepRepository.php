@@ -82,7 +82,7 @@ class SleepRepository
             $wake_time = $sleep_time->copy()->endOfDay();
             self::wakeSleep($wake_time->toTimeString());
 
-            $sleep_time = $wake_time->addDay()->startOfDay();
+            $sleep_time = Carbon::today()->startOfDay();
             self::addSleep($sleep_time->toDateString(), $sleep_time->toTimeString());
         }
     }
