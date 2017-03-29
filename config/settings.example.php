@@ -9,4 +9,6 @@ return [
     'baby_name' => 'Baby name',
 
     'baby_dob' => '2017-01-01',
+
+    'baby_gender' => 'girl', // boy/girl
 ];
