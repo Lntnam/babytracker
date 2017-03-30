@@ -24,7 +24,7 @@ class DayRecordRepository
         return VariableRepository::setCurrentValue('date', $date);
     }
 
-    public static function createUpdateDayRecord($sleep, $meal, $weight, $height)
+    public static function createUpdateDayRecord($sleep, $meal, $weight = null, $height = null)
     {
         $date = self::getCurrentDate();
 
@@ -62,16 +62,17 @@ class DayRecordRepository
     public static function closeToday() {
         $today = new Carbon(self::getCurrentDate());
 
-        SleepRepository::wakeSleep(Carbon::today()->endOfDay()->toTimeString()); // 23:59
+        $sleeping = SleepRepository::wakeSleep(Carbon::today()->endOfDay()->toTimeString()); // 23:59
 
         // calculate sleep, meal
         $sleep_total = SleepRepository::getTodayTotalSleepAmount();
         $meal_total = MealRepository::getTodayTotalMealAmount();
         $day_record = self::createUpdateDayRecord($sleep_total, $meal_total);
 
-        self::setCurrentDate($today->addDay());
+        self::setCurrentDate($today->addDay()->toDateString());
 
-        SleepRepository::addSleep(Carbon::today()->toTimeString()); // 00:00
+        if ($sleeping)
+            SleepRepository::addSleep(Carbon::today()->toTimeString()); // 00:00
 
         // notifications
         // check meal
