@@ -16,8 +16,8 @@ class CreateDayRecordsTable extends Migration
         Schema::create('day_records', function (Blueprint $table) {
             $table->timestamps();
             $table->date('day');
-            $table->integer('sleep');
-            $table->integer('meal');
+            $table->integer('sleep')->nullable();
+            $table->integer('meal')->nullable();
             $table->decimal('weight')->nullable();
             $table->integer('height')->nullable();
 
