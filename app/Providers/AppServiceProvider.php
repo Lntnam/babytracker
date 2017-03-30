@@ -17,12 +17,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         $name = config('settings.baby_name');
-        $dob = new Carbon(config('settings.baby_dob'));
-        $age = CarbonInterval::days($dob->diffInDays());
 
         View::share('name', $name);
-        View::share('dob', $dob);
-        View::share('age', $age);
     }
 
     /**

@@ -18,6 +18,8 @@ class HomeController extends Controller
         $notifications = NotificationRepository::getAllUnread();
 
         // Current values
+        $dob = new Carbon(config('settings.baby_dob'));
+        $age = CarbonInterval::days($dob->diffInDays());
         $weight = WeightRepository::getCurrentWeight();
         $height = WeightRepository::getCurrentHeight();
         $meal = MealRepository::getTodayTotalMealAmount();
@@ -40,6 +42,7 @@ class HomeController extends Controller
             'notifications' => $notifications,
             'weight' => $weight,
             'height' => $height,
+            'age' => $age,
 
             'meal' => $meal,
             'last_meal' => $last_meal,
