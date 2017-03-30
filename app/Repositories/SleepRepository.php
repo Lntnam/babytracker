@@ -111,4 +111,11 @@ class SleepRepository
 
         if ($sleep) $sleep->delete();
     }
+
+    public static function getSleepsOnDate($date)
+    {
+        return Sleep::where('on', $date)
+            ->whereNotNull('wake')
+            ->orderBy('sleep', 'asc')->get();
+    }
 }

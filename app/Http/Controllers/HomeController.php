@@ -22,37 +22,32 @@ class HomeController extends Controller
         $meal = MealRepository::getTodayTotalMealAmount();
         $sleep = SleepRepository::getTodayTotalSleepAmount();
         $sleep = CarbonInterval::hours(floor($sleep / 60))->minute($sleep % 60);
-        $sleeping = SleepRepository::isSleeping();
-        $name = config('settings.baby_name');
-
-        $dob = new Carbon(config('settings.baby_dob'));
-        $age = CarbonInterval::days($dob->diffInDays());
-
-        // Weight trend
-        $yesterdayWeight = WeightRepository::getYesterdayWeight();
 
         // Last meal
-        /** @var Carbon $lastMeal */
-        $lastMeal = MealRepository::getLastMealTime();
+        $last_meal = MealRepository::getLastMeal();
+        $today_meals = MealRepository::getMealsOnDate(Carbon::today()->toDateString());
+        $yesterday_meals =MealRepository::getMealsOnDate(Carbon::today()->subDay()->toDateString());
 
         // Sleep from
         $sleeping_record = SleepRepository::getCurrentSleepingRecord();
-
-        // Last sleep
         $last_sleep = SleepRepository::getLatestSleep();
+        $today_sleeps = SleepRepository::getSleepsOnDate(Carbon::today()->toDateString());
+        $yesterday_sleeps = SleepRepository::getSleepsOnDate(Carbon::today()->subDay()->toDateString());
 
         return view('home', [
             'notifications' => $notifications,
-            'name' => $name,
-            'age' => $age,
             'weight' => $weight,
+
             'meal' => $meal,
+            'last_meal' => $last_meal,
+            'today_meals' => $today_meals,
+            'yesterday_meals' => $yesterday_meals,
+
             'sleep' => $sleep,
-            'sleeping' => $sleeping,
             'sleeping_record' => $sleeping_record,
-            'last_weight' => $yesterdayWeight,
-            'last_meal' => $lastMeal,
-            'last_sleep' => $last_sleep
+            'last_sleep' => $last_sleep,
+            'today_sleeps' => $today_sleeps,
+            'yesterday_sleeps' => $yesterday_sleeps
         ]);
     }
 

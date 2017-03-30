@@ -1,5 +1,5 @@
 body {
-    padding-top: 2rem;
+    padding-top: 4rem;
     padding-left: 1rem;
     padding-right: 1rem;
 }
@@ -15,4 +15,8 @@ body {
 
 .report-cell {
     border: 1px solid #ECEEEF;
+}
+
+.nav-tabs {
+    margin-bottom: 1rem;
 }

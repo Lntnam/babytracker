@@ -49,19 +49,11 @@ class MealRepository
         $meal->save();
     }
 
-    public static function getLastMealTime()
+    public static function getLastMeal()
     {
-        $meal = Meal::orderBy('on', 'desc')
+        return Meal::orderBy('on', 'desc')
             ->orderBy('at', 'desc')
             ->first();
-        if ($meal) {
-            $at = new Carbon($meal->at);
-            if ($at->gt(new Carbon())) {
-                $at->subDay();
-            }
-            return $at;
-        }
-        return null;
     }
 
     public static function getMealsOnDate($date)

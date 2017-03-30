@@ -3,11 +3,9 @@
 @section('title', 'Dashboard')
 
 @section('content')
-    <div class="main-info">
-        <h3>{{ $name }}</h3>
-        <h3>{{ Carbon::now()->toFormattedDateString()}}
-            ({{ $age->weeks . 'w ' . $age->daysExcludeWeeks . 'd' }})</h3>
-    </div>
+    <h5>as at {{ Carbon::now()->toFormattedDateString()}}
+        <span class="badge badge-primary">{{ $age->weeks . 'w ' . $age->daysExcludeWeeks . 'd' }}</span>
+        <span class="badge badge-info">{{ $weight }}kg</span></h5>
 
     <!-- notifications -->
     @if (!empty($notifications))
@@ -26,91 +24,188 @@
         </div>
     @endif
 
-    <!-- Weight -->
-    <div class="row">
-        <div class="col-2">
-            <h4><i class="fa fa-balance-scale fa-fw" aria-hidden="true"></i></h4>
-        </div>
-        <div class="col-6">
-            <h4><label id="weight-value">{{ $weight }}</label>kg
-                <i class="fa {{ isset($last_weight) ? ($last_weight > $weight ? 'fa-long-arrow-down text-danger' : ($last_weight < $weight ? 'fa-long-arrow-up text-success' : 'fa-long-arrow-right text-muted')) : 'fa-long-arrow-right text-muted' }}"
-                   aria-hidden="true"></i>
-            </h4>
-        </div>
-        <div class="col-4">
-            <button type="button" class="btn btn-primary btn-block" data-toggle="modal"
-                    data-target="#changeWeightModal">change
-            </button>
-        </div>
-    </div>
+    <!-- Tab -->
+    <ul class="nav nav-tabs nav-fill" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" data-toggle="tab" href="#eat" role="tab"><i class="fa fa-cutlery fa-fw"
+                                                                                   aria-hidden="true"></i> Eat</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#sleep" role="tab"><i class="fa fa-moon-o fa-fw"
+                                                                              aria-hidden="true"></i> Sleep</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#next-day" role="tab"><i class="fa fa-step-forward fa-fw"
+                                                                                 aria-hidden="true"></i> End Day</a>
+        </li>
+    </ul>
 
-    <!-- Meal -->
-    <div class="row">
-        <div class="col-2">
-            <h4><i class="fa fa-cutlery fa-fw" aria-hidden="true"></i></h4>
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div class="tab-pane active" id="eat" role="tabpanel">
+            <!-- Meal -->
+            <div class="row"> <!-- current value header -->
+                <div class="col-6 text-center">
+                    Today so far
+                </div>
+                <div class="col-6 text-center">
+                    last meal @
+                    <mark id="last-meal-time">{{ !empty($last_meal) ? (new Carbon($last_meal->at))->format('H:i') : '' }}</mark>
+                </div>
+            </div>
+            <div class="row"> <!-- current values -->
+                <div class="col-6 text-center">
+                    <label id="today-meal-value" class="display-3 text-info">{{ $meal }}</label>ml
+                </div>
+                <div class="col-6 text-center">
+                    <label id="last-meal-value" class="display-3">{{ $last_meal->value }}</label>ml
+                </div>
+            </div>
+            <div class="row"><!-- add meal button -->
+                <div class="col-6 push-3">
+                    <button type="button" class="btn btn-primary btn-block" data-toggle="modal"
+                            data-target="#addMealModal"><i class="fa fa-plus-square" aria-hidden="true"></i> add
+                    </button>
+                </div>
+            </div>
+            <div class="row"><!-- Meal today vs yesterday -->
+                <div class="col-6">
+                    <table class="table table-sm">
+                        <thead>
+                        <tr>
+                            <th colspan="2">Today</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach ($today_meals as $meal)
+                            <tr>
+                                <th scope="row">{{ (new Carbon($meal->at))->format('H:i') }}</th>
+                                <td>{{  $meal->value }}
+                                    ml {!! $meal->feed_type == 'breast' ? '<i class="fa fa-user-o text-success" aria-hidden="true"></i>' : '' !!}</td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-6">
+                    <table class="table table-sm">
+                        <thead>
+                        <tr>
+                            <th colspan="2">Yesterday</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach ($yesterday_meals as $meal)
+                            <tr>
+                                <th scope="row">{{ (new Carbon($meal->at))->format('H:i') }}</th>
+                                <td>{{ $meal->value }}ml</td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-        <div class="col-6">
-            <h4><label id="meal-value">{{ $meal }}</label>ml</h4>
-            last meal @ <label id="last-meal">{{ !empty($last_meal) ? $last_meal->format('H:i') : '' }}</label>
-        </div>
-        <div class="col-4">
-            <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#addMealModal">
-                add
-            </button>
-        </div>
-    </div>
-
-    <!-- Sleep -->
-    <div class="row">
-        <div class="col-2">
-            <h4><i class="fa fa-moon-o fa-fw" aria-hidden="true"></i></h4>
-        </div>
-        <div class="col-6">
-            <h4><label id="sleep-value">{{ $sleep->hours . 'h ' . $sleep->minutes . 'm' }}</label></h4>
+        <div class="tab-pane" id="sleep" role="tabpanel">
+            <!-- Sleep -->
+            <div class="row"> <!-- current value header -->
+                <div class="col-6 text-center">
+                    Today so far
+                </div>
+                <div class="col-6 text-center">
+                    wake up @
+                    <mark id="last-meal-time">{{ (new Carbon($last_sleep->wake))->format('H:i') }}</mark>
+                </div>
+            </div>
+            <div class="row"> <!-- current values -->
+                <div class="col-6 text-center">
+                    <label id="today-sleep-value-hour" class="display-3 text-info">{{ $sleep->hours }}h</label>
+                    <br/><label id="today-sleep-value-minute" class="display-4 text-info">{{  $sleep->minutes }}m</label>
+                </div>
+                <div class="col-6 text-center">
+                    <label id="last-sleep-value-hour" class="display-3">{{ $last_sleep->hours }}h</label>
+                    <br/><label id="last-sleep-value-minute" class="display-4">{{ $last_sleep->minutes }}m</label>
+                </div>
+            </div>
             @if (!empty($sleeping_record))
-                sleeping from <label id="sleep-from">{{ (new Carbon($sleeping_record->sleep))->format('H:i') }}</label>
-            @elseif (!empty($last_sleep))
-                last wake up @ {{ (new Carbon($last_sleep->wake))->format('H:i') }}
+                <div class="row"> <!-- current sleeping status -->
+                    <div class="col-12 text-center">
+                        <p class="lead">sleeping from <mark
+                                    id="sleep-from">{{ (new Carbon($sleeping_record->sleep))->format('H:i') }}</mark></p>
+                    </div>
+                </div>
+                <div class="row"><!-- wake up buttons -->
+                    <div class="col-5 push-1">
+                        <button id="sleep-button" type="button"
+                                class="btn btn-success btn-block"
+                                data-toggle="modal" data-target="#wakeUpModal"><i class="fa fa-sun-o" aria-hidden="true"></i> wake up
+                        </button>
+                    </div>
+                    <div class="col-5 push-1">
+                        <button id="cancel-sleep-button" type="button" class="btn btn-danger btn-block"><i class="fa fa-minus-square" aria-hidden="true"></i> cancel</button>
+                    </div>
+                </div>
+            @else
+                <div class="row">
+                    <div class="col-6 push-3">
+                        <button id="sleep-button" type="button"
+                                class="btn btn-primary btn-block"
+                                data-toggle="modal" data-target="#addSleepModal"><i class="fa fa-moon-o" aria-hidden="true"></i> sleep
+                        </button>
+                    </div>
+                </div>
             @endif
+            <div class="row"> <!-- Sleep today vs yesterday -->
+                <div class="col-6">
+                    <table class="table table-sm">
+                        <thead>
+                        <tr>
+                            <th colspan="2">Today</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach ($today_sleeps as $sleep)
+                            <tr>
+                                <th scope="row">{{ (new Carbon($sleep->sleep))->format('H:i') }}</th>
+                                <td>{{  $sleep->hours }}h {{ $sleep->minutes }}m</td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-6">
+                    <table class="table table-sm">
+                        <thead>
+                        <tr>
+                            <th colspan="2">Yesterday</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach ($yesterday_sleeps as $sleep)
+                            <tr>
+                                <th scope="row">{{ (new Carbon($sleep->sleep))->format('H:i') }}</th>
+                                <td>{{  $sleep->hours }}h {{ $sleep->minutes }}m</td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-        <div class="col-4">
-            <button id="sleep-button" type="button" class="btn btn-{{ $sleeping ? 'success' : 'primary' }} btn-block"
-                    data-toggle="modal" data-target="#{{ $sleeping ? 'wakeUp' : 'addSleep' }}Modal">
-                {{ $sleeping ? 'wake up' : 'sleep' }}
-            </button>
-            @if ($sleeping)
-                <button id="cancel-sleep-button" type="button" class="btn btn-danger btn-block">cancel</button>
-            @endif
-        </div>
-    </div>
-
-    <!-- Reports -->
-    <div class="row">
-        <div class="col-4">
-            <a href="{!! route('MealReport') !!}" class="btn btn-info btn-block"><i class="fa fa-line-chart"
-                                                                                    aria-hidden="true"></i> Meals</a>
-        </div>
-        <div class="col-4">
-            <a href="{!! route('WeightReport') !!}" class="btn btn-info btn-block"><i class="fa fa-line-chart"
-                                                                                      aria-hidden="true"></i> Weight</a>
-        </div>
-        <div class="col-4">
-            <a href="{!! route('SleepReport') !!}" class="btn btn-info btn-block"><i class="fa fa-line-chart"
-                                                                                     aria-hidden="true"></i> Sleeps</a>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-6">
-            <button type="button" class="btn btn-danger btn-block"><i class="fa fa-sliders" aria-hidden="true"></i>
-                Config
-            </button>
-        </div>
-        <div class="col-6">
-            <button type="button" id="end-day-button" class="btn btn-danger btn-block" data-toggle="modal"
-                    data-target="#endDayModal"><i class="fa fa-hourglass-end"
-                                                  aria-hidden="true"></i> End Day
-            </button>
+        <div class="tab-pane" id="next-day" role="tabpanel">
+            <div class="row">
+                <div class="col-12">
+                    <p class="text-danger">This action is not reversible. You should only end the day when it's passed
+                        mid-night.</p>
+                    <p class="text-danger">Do you still want to end the day?</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6 push-3">
+                    <a id="end-day-button" class="btn btn-danger btn-block" href="{{ route('CloseDay') }}"><i class="fa fa-step-forward" aria-hidden="true"></i> End Day
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -241,29 +336,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Confirm End Day Modal -->
-    <div class="modal fade" id="endDayModal" tabindex="-1" role="dialog" aria-labelledby="End Day" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="endDayModalLabel">Are you sure to end the day?</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p class="text-danger">This action is not reversible. You should only end the day when it's passed
-                        mid-night.</p>
-                    <p class="text-danger">Do you still want to end the day?</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No! Abort!</button>
-                    <a href="{{ route('CloseDay') }}" class="btn btn-danger">Yes! End the day!</a>
-                </div>
-            </div>
-        </div>
-    </div>
 @endsection
 
 @section('scripts')
@@ -316,7 +388,7 @@
         };
         $('#addSleepModal').find('button.btn-primary').on('click', sleepClick);
         $('#wakeUpModal').find('button.btn-primary').on('click', sleepClick);
-        $('#cancel-sleep-button').on('click', function() {
+        $('#cancel-sleep-button').on('click', function () {
             $(this).append('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>')
             $(this).off('click');
             $.post("{{ route('Ajax.CancelSleep') }}", {}, function () {
