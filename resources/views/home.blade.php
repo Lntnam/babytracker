@@ -1,7 +1,5 @@
 @extends('layouts.app')
-
 @section('title', 'Dashboard')
-
 @section('content')
     <div class="row">
         <div class="col-3">
@@ -287,8 +285,10 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="meal-time-input" class="sr-only">Time</label>
-                        <input class="form-control" type="time" value="{{ Carbon::now()->format('H:i') }}"
-                               id="meal-time-input">
+                        <div class="input-group clockpicker" data-placement="right" data-align="top" data-autoclose="true">
+                            <input id="meal-time-input" type="text" class="form-control" value="{{ Carbon::now()->format('H:i') }}">
+                            <span class="input-group-addon"><i class="fa fa-clock-o" aria-hidden="true"></i></span>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="meal-input" class="sr-only">ml</label>
@@ -335,8 +335,10 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="meal-time-input" class="sr-only">Time</label>
-                        <input class="form-control" type="time" value="{{ Carbon::now()->format('H:i') }}"
-                               id="sleep-time-input">
+                        <div class="input-group clockpicker" data-placement="right" data-align="top" data-autoclose="true">
+                            <input id="sleep-time-input" type="text" class="form-control" value="{{ Carbon::now()->format('H:i') }}">
+                            <span class="input-group-addon"><i class="fa fa-clock-o" aria-hidden="true"></i></span>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -360,8 +362,10 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="meal-time-input" class="sr-only">Time</label>
-                        <input class="form-control" type="time" value="{{ Carbon::now()->format('H:i') }}"
-                               id="wake-time-input">
+                        <div class="input-group clockpicker" data-placement="right" data-align="top" data-autoclose="true">
+                            <input id="wake-time-input" type="text" class="form-control" value="{{ Carbon::now()->format('H:i') }}">
+                            <span class="input-group-addon"><i class="fa fa-clock-o" aria-hidden="true"></i></span>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -373,8 +377,21 @@
     </div>
 @endsection
 
+@section('stylesheets')
+    <link href="{{ asset('css/bootstrap-clockpicker.min.css') }}" rel="stylesheet" type="text/css">
+@endsection
+
 @section('scripts')
+    <script type="text/javascript" src="{{ asset('js/bootstrap-clockpicker.min.js') }}"></script>
     <script type="text/javascript">
+        var clockpicker_options = {
+            default: 'now',
+            autoclose: true
+        };
+        $('#meal-time-input').clockpicker(clockpicker_options);
+        $('#sleep-time-input').clockpicker(clockpicker_options);
+        $('#wake-time-input').clockpicker(clockpicker_options);
+
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

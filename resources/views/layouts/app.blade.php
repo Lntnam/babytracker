@@ -8,10 +8,9 @@
 
     <title>@yield('title')</title>
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
-
     <link href="{{ asset('css/font-awesome.min.css') }}" rel="stylesheet" type="text/css">
-
     <link href="{{ asset('css/app.css') }}" rel="stylesheet" type="text/css">
+    @yield('stylesheets')
 </head>
 <body>
 
@@ -50,9 +49,9 @@
     @yield('content')
 </div>
 
-<script src="{{ asset('js/jquery-3.2.0.min.js') }}"></script>
-<script src="{{ asset('js/tether.min.js') }}"></script>
-<script src="{{ asset('js/bootstrap.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/jquery-3.2.0.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/tether.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/bootstrap.min.js') }}"></script>
 @yield('scripts')
 </body>
 </html>
