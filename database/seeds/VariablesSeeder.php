@@ -28,6 +28,7 @@ class VariablesSeeder extends Seeder
                 'weight' => 0,
                 'sleep_time' => 0,
                 'meal' => 0,
+                'date' => \Carbon\Carbon::today()->toDateString(),
             ]),
         ]);
     }

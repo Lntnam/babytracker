@@ -18,7 +18,7 @@ class CreateMealsTable extends Migration
             $table->date('on');
             $table->time('at');
             $table->integer('value');
-            $table->boolean('is_full');
+            $table->enum('feed_type', ['bottle', 'breast']);
             $table->timestamps();
         });
     }
