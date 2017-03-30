@@ -15,16 +15,13 @@ class SleepRepository
 {
     public static function getTodayTotalSleepAmount()
     {
-        return VariableRepository::getCurrentValueByKey('sleep_time');
-    }
-
-    public static function setTodayTotalSleepAmount($minutes)
-    {
-        $sleep = VariableRepository::getCurrentValueByKey('sleep_time');
-        $sleep += $minutes;
-        VariableRepository::setCurrentValue('sleep_time', $sleep);
-
-        return $sleep;
+        $today = DayRecordRepository::getCurrentDate();
+        $sleeps = self::getSleepsOnDate($today);
+        $total = 0;
+        foreach ($sleeps as $sleep) {
+            $total += $sleep->hours * 60 + $sleep->minutes;
+        }
+        return $total;
     }
 
     public static function getCurrentSleepingRecord()
@@ -41,56 +38,45 @@ class SleepRepository
         return !empty(self::getCurrentSleepingRecord());
     }
 
-    public static function addSleep($date, $time)
+    public static function addSleep($time)
     {
+        $today = DayRecordRepository::getCurrentDate();
+
         $sleep = New Sleep();
-        $sleep->on = $date;
+        $sleep->on = $today;
         $sleep->sleep = $time;
 
-        return $sleep->save();
+        $sleep->save();
+        return $sleep;
     }
 
     public static function wakeSleep($wake_time)
     {
-        $sleep = Sleep::whereNull('wake')
-            ->orderBy('id', 'desc')
-            ->first();
+        $sleep = self::getCurrentSleepingRecord();
+
         if ($sleep) {
             $sleep->wake = $wake_time;
 
             $wake_time = new Carbon($wake_time);
             $sleep_time = new Carbon($sleep->sleep);
-            if ($sleep_time->gt($wake_time)) $sleep_time->subDay();
+            if ($sleep_time->gte($wake_time)) $sleep_time->subDay();
 
             $minutes = $sleep_time->diffInMinutes($wake_time);
             $sleep->hours = floor($minutes / 60);
             $sleep->minutes = $minutes % 60;
 
             $sleep->save();
-
-            return self::setTodayTotalSleepAmount($minutes);
+            return $sleep;
         }
-
-        return -1;
-    }
-
-    public static function splitSleep()
-    {
-        $sleep = self::getCurrentSleepingRecord();
-        if (!empty($sleep)) {
-            $sleep_time = new Carbon($sleep->sleep);
-            $wake_time = $sleep_time->copy()->endOfDay();
-            self::wakeSleep($wake_time->toTimeString());
-
-            $sleep_time = Carbon::today()->startOfDay();
-            self::addSleep($sleep_time->toDateString(), $sleep_time->toTimeString());
-        }
+        return null;
     }
 
     public static function getPastRecords($no_of_days)
     {
-        $date = Carbon::today()->subDay($no_of_days - 1);
-        return Sleep::where('on', '>=', $date->toDateString())
+        $today = new Carbon(DayRecordRepository::getCurrentDate());
+        $date = $today->subDay($no_of_days - 1);
+
+        return Sleep::whereBetween('on', [$date->toDateString(), $today->toDateString()])
             ->whereNotNull('wake')
             ->orderBy('on', 'asc')
             ->orderBy('sleep', 'asc')

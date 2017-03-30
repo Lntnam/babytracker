@@ -18,7 +18,9 @@ class VariableRepository
             ->first();
         if (!empty($var)) {
             $var_array = json_decode($var->value);
-            return $var_array->$key;
+
+            if (isset($var_array->$key))
+                return $var_array->$key;
         }
         return null;
     }
@@ -57,14 +59,7 @@ class VariableRepository
             $var_array = json_decode($var->value);
             $var_array->$key = $value;
             $var->value = json_encode($var_array);
-            return $var->save();
+            $var->save();
         }
-        return false;
-    }
-
-    public static function clearCurrentValues()
-    {
-        self::setCurrentValue('sleep_time', 0);
-        self::setCurrentValue('meal', 0);
     }
 }

@@ -8,7 +8,6 @@
 
 namespace App\Repositories;
 
-
 use App\Models\Meal;
 use Carbon\Carbon;
 
@@ -16,37 +15,36 @@ class MealRepository
 {
     public static function getTodayTotalMealAmount()
     {
-        return VariableRepository::getCurrentValueByKey('meal');
-    }
-
-    public static function setTodayTotalMeanAmount($value)
-    {
-        VariableRepository::setCurrentValue('meal', (float)$value);
+        $today = DayRecordRepository::getCurrentDate();
+        $meals = self::getMealsOnDate($today);
+        $total = 0;
+        foreach ($meals as $meal) {
+            $total += $meal->value;
+        }
+        return $total;
     }
 
     public static function addUpdateMeal($value, $at, $type)
     {
-        $datetime = new Carbon($at);
-        if ($datetime->greaterThan(Carbon::now())) {
-            $datetime->subDay();
-        }
+        $today = DayRecordRepository::getCurrentDate();
 
         // find if meal exists
         $meal = Meal::where([
-            ['on', $datetime->toDateString()],
-            ['at', $datetime->toTimeString()]
+            ['on', $today],
+            ['at', $at]
         ])->first();
 
         if (empty($meal)) {
             $meal = new Meal();
-            $meal->on = $datetime->toDateString();
+            $meal->on = $today;
+            $meal->at = $at;
         }
 
-        $meal->at = $at;
         $meal->value = $value;
         $meal->feed_type = $type;
 
         $meal->save();
+        return $meal;
     }
 
     public static function getLastMeal()
@@ -58,13 +56,17 @@ class MealRepository
 
     public static function getMealsOnDate($date)
     {
-        return Meal::where('on', $date)->orderBy('at', 'asc')->get();
+        return Meal::where('on', $date)
+            ->orderBy('at', 'asc')
+            ->get();
     }
 
     public static function getPastRecords($no_of_days)
     {
-        $date = Carbon::today()->subDay($no_of_days - 1);
-        return Meal::where('on', '>=', $date->toDateString())
+        $today = new Carbon(DayRecordRepository::getCurrentDate());
+        $date = $today->copy()->subDay($no_of_days - 1);
+
+        return Meal::whereBetween('on', [$date->toDateString(), $today->toDateString()])
             ->orderBy('on', 'asc')
             ->orderBy('at', 'asc')
             ->get();

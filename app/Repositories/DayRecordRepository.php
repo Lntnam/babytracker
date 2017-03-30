@@ -13,26 +13,40 @@ use Carbon\Carbon;
 
 class DayRecordRepository
 {
-    public static function createDayRecord()
+    public static function getCurrentDate() {
+        $date = VariableRepository::getCurrentValueByKey('date');
+        if (empty($date))
+            return Carbon::today()->toDateString();
+        return $date;
+    }
+
+    public static function setCurrentDate($date) {
+        return VariableRepository::setCurrentValue('date', $date);
+    }
+
+    public static function createUpdateDayRecord($sleep, $meal, $weight, $height)
     {
-        $date = Carbon::now()->subDay()->toDateString();
+        $date = self::getCurrentDate();
 
-        $weight = WeightRepository::getCurrentWeight();
-        $meal = MealRepository::getTodayTotalMealAmount();
-        $sleep = SleepRepository::getTodayTotalSleepAmount();
-        $poop = 0;
-        $pee = 0;
+        $record = self::getDayRecord($date);
+        if (empty($record)) {
+            $record = new DayRecord();
+            $record->day = $date;
+        }
+        else {
+            if ($sleep == null) $sleep = $record->sleep;
+            if ($meal == null) $meal = $record->meal;
+            if ($weight == null) $weight = $record->weight;
+            if ($height == null) $height = $record->height;
+        }
 
-        $day = new DayRecord();
-        $day->weight = $weight;
-        $day->meal = $meal;
-        $day->sleep = $sleep;
-        $day->poop = $poop;
-        $day->pee = $pee;
-        $day->day = $date;
+        $record->weight = $weight;
+        $record->meal = $meal;
+        $record->sleep = $sleep;
+        $record->height = $height;
 
-        $day->save();
-        return $day;
+        $record->save();
+        return $record;
     }
 
     public static function getDayRecord($date)
@@ -46,16 +60,26 @@ class DayRecordRepository
     }
 
     public static function closeToday() {
-        SleepRepository::splitSleep();
-        $day_record = self::createDayRecord();
-        VariableRepository::clearCurrentValues();
+        $today = new Carbon(self::getCurrentDate());
+
+        SleepRepository::wakeSleep(Carbon::today()->endOfDay()->toTimeString()); // 23:59
+
+        // calculate sleep, meal
+        $sleep_total = SleepRepository::getTodayTotalSleepAmount();
+        $meal_total = MealRepository::getTodayTotalMealAmount();
+        $day_record = self::createUpdateDayRecord($sleep_total, $meal_total);
+
+        self::setCurrentDate($today->addDay());
+
+        SleepRepository::addSleep(Carbon::today()->toTimeString()); // 00:00
 
         // notifications
         // check meal
         $min_meal = VariableRepository::getExpectationByKey('meal_per_day');
-        if ($day_record->meal < $min_meal) {
+        if ($meal_total < $min_meal) {
             NotificationRepository::createNotification('warning', 'Beware!', 'Less than '.$min_meal.'ml on '.$day_record->day.'.');
         }
+
         // check weight
         $min_weight_inc = VariableRepository::getExpectationByKey('gram_per_day');
         $day_count = ceil(100 / $min_weight_inc);

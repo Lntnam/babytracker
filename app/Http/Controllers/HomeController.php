@@ -19,24 +19,30 @@ class HomeController extends Controller
 
         // Current values
         $weight = WeightRepository::getCurrentWeight();
+        $height = WeightRepository::getCurrentHeight();
         $meal = MealRepository::getTodayTotalMealAmount();
         $sleep = SleepRepository::getTodayTotalSleepAmount();
         $sleep = CarbonInterval::hours(floor($sleep / 60))->minute($sleep % 60);
+        $current_date = DayRecordRepository::getCurrentDate();
 
         // Last meal
         $last_meal = MealRepository::getLastMeal();
-        $today_meals = MealRepository::getMealsOnDate(Carbon::today()->toDateString());
-        $yesterday_meals =MealRepository::getMealsOnDate(Carbon::today()->subDay()->toDateString());
+        $today_meals = MealRepository::getMealsOnDate($current_date);
+        $yesterday_meals = MealRepository::getMealsOnDate((new Carbon($current_date))->subDay()->toDateString());
 
         // Sleep from
         $sleeping_record = SleepRepository::getCurrentSleepingRecord();
         $last_sleep = SleepRepository::getLatestSleep();
-        $today_sleeps = SleepRepository::getSleepsOnDate(Carbon::today()->toDateString());
-        $yesterday_sleeps = SleepRepository::getSleepsOnDate(Carbon::today()->subDay()->toDateString());
+        $today_sleeps = SleepRepository::getSleepsOnDate($current_date);
+        $yesterday_sleeps = SleepRepository::getSleepsOnDate((new Carbon($current_date))->subDay()->toDateString());
+
+        // End day eligibility
+        $day_record = DayRecordRepository::getDayRecord($current_date);
 
         return view('home', [
             'notifications' => $notifications,
             'weight' => $weight,
+            'height' => $height,
 
             'meal' => $meal,
             'last_meal' => $last_meal,
@@ -47,7 +53,10 @@ class HomeController extends Controller
             'sleeping_record' => $sleeping_record,
             'last_sleep' => $last_sleep,
             'today_sleeps' => $today_sleeps,
-            'yesterday_sleeps' => $yesterday_sleeps
+            'yesterday_sleeps' => $yesterday_sleeps,
+
+            'can_close' => ($day_record == null || $day_record->meal == null),
+            'current_date' => $current_date,
         ]);
     }
 

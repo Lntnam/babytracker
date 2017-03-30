@@ -3,9 +3,11 @@
 @section('title', 'Dashboard')
 
 @section('content')
-    <h5>as at {{ Carbon::now()->toFormattedDateString()}}
+    <h5>{{ (new Carbon($current_date))->toFormattedDateString() }}
         <span class="badge badge-primary">{{ $age->weeks . 'w ' . $age->daysExcludeWeeks . 'd' }}</span>
-        <span class="badge badge-info">{{ $weight }}kg</span></h5>
+        <span class="badge badge-info">{{ $weight }}kg</span>
+        <span class="badge badge-info">{{ $height }}cm</span>
+    </h5>
 
     <!-- notifications -->
     @if (!empty($notifications))
@@ -120,7 +122,7 @@
             <div class="row"> <!-- current values -->
                 <div class="col-6 text-center">
                     <label id="today-sleep-value-hour" class="display-3 text-info">{{ $sleep->hours }}h</label>
-                    <br/><label id="today-sleep-value-minute" class="display-4 text-info">{{  $sleep->minutes }}m</label>
+                    <br/><label id="today-sleep-value-minute" class="display-4 text-info">{{ $sleep->minutes }}m</label>
                 </div>
                 <div class="col-6 text-center">
                     <label id="last-sleep-value-hour" class="display-3">{{ $last_sleep->hours }}h</label>
@@ -130,19 +132,24 @@
             @if (!empty($sleeping_record))
                 <div class="row"> <!-- current sleeping status -->
                     <div class="col-12 text-center">
-                        <p class="lead">sleeping from <mark
-                                    id="sleep-from">{{ (new Carbon($sleeping_record->sleep))->format('H:i') }}</mark></p>
+                        <p class="lead">sleeping from
+                            <mark
+                                    id="sleep-from">{{ (new Carbon($sleeping_record->sleep))->format('H:i') }}</mark>
+                        </p>
                     </div>
                 </div>
                 <div class="row"><!-- wake up buttons -->
                     <div class="col-5 push-1">
                         <button id="sleep-button" type="button"
                                 class="btn btn-success btn-block"
-                                data-toggle="modal" data-target="#wakeUpModal"><i class="fa fa-sun-o" aria-hidden="true"></i> wake up
+                                data-toggle="modal" data-target="#wakeUpModal"><i class="fa fa-sun-o"
+                                                                                  aria-hidden="true"></i> wake up
                         </button>
                     </div>
                     <div class="col-5 push-1">
-                        <button id="cancel-sleep-button" type="button" class="btn btn-danger btn-block"><i class="fa fa-minus-square" aria-hidden="true"></i> cancel</button>
+                        <button id="cancel-sleep-button" type="button" class="btn btn-danger btn-block"><i
+                                    class="fa fa-minus-square" aria-hidden="true"></i> cancel
+                        </button>
                     </div>
                 </div>
             @else
@@ -150,7 +157,8 @@
                     <div class="col-6 push-3">
                         <button id="sleep-button" type="button"
                                 class="btn btn-primary btn-block"
-                                data-toggle="modal" data-target="#addSleepModal"><i class="fa fa-moon-o" aria-hidden="true"></i> sleep
+                                data-toggle="modal" data-target="#addSleepModal"><i class="fa fa-moon-o"
+                                                                                    aria-hidden="true"></i> sleep
                         </button>
                     </div>
                 </div>
@@ -195,15 +203,24 @@
         <div class="tab-pane" id="next-day" role="tabpanel">
             <div class="row">
                 <div class="col-12">
-                    <p class="text-danger">This action is not reversible. You should only end the day when it's passed
-                        mid-night.</p>
-                    <p class="text-danger">Do you still want to end the day?</p>
+                    @if ($can_close)
+                        <p class="text-danger">This action is not reversible. All current values will be cleared and you
+                            cannot enter more data for today.</p>
+                        <p class="text-danger">Do you still want to end the day?</p>
+                    @else
+                        <p class="text-info">
+                            You cannot close today as it's not passed midnight.
+                        </p>
+                    @endif
                 </div>
             </div>
             <div class="row">
                 <div class="col-6 push-3">
-                    <a id="end-day-button" class="btn btn-danger btn-block" href="{{ route('CloseDay') }}"><i class="fa fa-step-forward" aria-hidden="true"></i> End Day
-                    </a>
+                    @if ($can_close)
+                        <a id="end-day-button" class="btn btn-danger btn-block" href="{{ route('CloseDay') }}"><i
+                                    class="fa fa-step-forward" aria-hidden="true"></i> End Day
+                        </a>
+                    @endif
                 </div>
             </div>
         </div>

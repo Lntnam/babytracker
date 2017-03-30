@@ -15,24 +15,24 @@ use Illuminate\Support\Facades\DB;
 
 class WeightRepository
 {
-    public static function getCurrentWeight()
-    {
+    public static function getCurrentWeight() {
         return VariableRepository::getCurrentValueByKey('weight');
     }
 
-    public static function setCurrentWeight($value)
-    {
+    public static function getCurrentHeight() {
+        return VariableRepository::getCurrentValueByKey('height');
+    }
+
+    public static function setCurrentWeight($value) {
         return VariableRepository::setCurrentValue('weight', (float)$value);
     }
 
-    public static function getYesterdayWeight()
-    {
-        $record = DayRecordRepository::getDayRecord(Carbon::today()->subDay()->toDateString());
+    public static function setCurrentHeight($value) {
+        return VariableRepository::setCurrentValue('weight', (int)$value);
+    }
 
-        if ($record) {
-            return $record->weight;
-        }
-        return null;
+    public static function updateWeightHeight($weight, $height) {
+        return DayRecordRepository::createUpdateDayRecord(null, null, $weight, $height);
     }
 
     /**

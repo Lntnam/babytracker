@@ -6,8 +6,6 @@ use App\Repositories\MealRepository;
 use App\Repositories\NotificationRepository;
 use App\Repositories\SleepRepository;
 use App\Repositories\WeightRepository;
-use Carbon\Carbon;
-use Carbon\CarbonInterval;
 use Illuminate\Http\Request;
 
 class AjaxController extends Controller
@@ -33,34 +31,15 @@ class AjaxController extends Controller
         $at = $request->input('at');
 
         MealRepository::addUpdateMeal($value, $at, $type);
-
-        $today_meals = MealRepository::getMealsOnDate(Carbon::today()->toDateString());
-        $today_amount = 0;
-        foreach ($today_meals as $meal) {
-            $today_amount += $meal->value;
-        }
-        MealRepository::setTodayTotalMeanAmount($today_amount);
-
-        return $today_amount;
     }
 
     public function toggleSleep(Request $request) {
         $sleeping = SleepRepository::getCurrentSleepingRecord();
         if (empty($sleeping)) { // go to sleep
-            $time = new Carbon($request->input('sleep_time'));
-            if ($time->gt(Carbon::now())) $time->subday();
-
-            SleepRepository::addSleep($time->toDateString(), $time->toTimeString());
-
-            return 0;
+            SleepRepository::addSleep($request->input('sleep_time'));
         }
         else { // wake up
-            $time = new Carbon($request->input('wake_time'));
-            if ($time->gt(Carbon::now())) $time->subday();
-
-            $sleep_value = SleepRepository::wakeSleep($time->toTimeString());
-            $interval = CarbonInterval::hours(floor($sleep_value / 60))->minute($sleep_value % 60);
-            return $interval->hours . 'h ' . $interval->minutes . 'm';
+            SleepRepository::wakeSleep($request->input('wake_time'));
         }
     }
 
