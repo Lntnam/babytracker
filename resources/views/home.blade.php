@@ -5,12 +5,8 @@
         <div class="col-3">
             <h5>{{ (new Carbon($current_date))->format('M j') }}</h5>
         </div>
-        <div class="col-7">
-            <h5>
-                <span class="badge badge-success">{{ $age->weeks . 'w ' . $age->daysExcludeWeeks . 'd' }}</span>
-                <span class="badge badge-info">{{ $weight }}kg</span>
-                <span class="badge badge-info">{{ $height }}cm</span>
-            </h5>
+        <div id="age-weight-height" class="col-7">
+            @include('sub.age_weight_height')
         </div>
         <div class="col-1">
             <button type="button" role="button" class="btn btn-sm" data-toggle="modal"
@@ -55,22 +51,8 @@
     <div class="tab-content">
         <div class="tab-pane active" id="eat" role="tabpanel">
             <!-- Meal -->
-            <div class="row"> <!-- current value header -->
-                <div class="col-6 text-center">
-                    Today so far
-                </div>
-                <div class="col-6 text-center">
-                    last meal @
-                    <mark id="last-meal-time">{{ !empty($last_meal) ? (new Carbon($last_meal->at))->format('H:i') : '' }}</mark>
-                </div>
-            </div>
-            <div class="row"> <!-- current values -->
-                <div class="col-6 text-center">
-                    <label id="today-meal-value" class="display-3 text-info">{{ $meal }}</label>ml
-                </div>
-                <div class="col-6 text-center">
-                    <label id="last-meal-value" class="display-3">{{ $last_meal->value }}</label>ml
-                </div>
+            <div id="meal-snapshot">
+                @include('sub.meal_snapshot')
             </div>
             <div class="row"><!-- add meal button -->
                 <div class="col-6 push-3">
@@ -80,132 +62,28 @@
                 </div>
             </div>
             <div class="row"><!-- Meal today vs yesterday -->
-                <div class="col-6">
-                    <table class="table table-sm">
-                        <thead>
-                        <tr>
-                            <th colspan="2">Today</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach ($today_meals as $meal)
-                            <tr>
-                                <th scope="row">{{ (new Carbon($meal->at))->format('H:i') }}</th>
-                                <td>{{  $meal->value }}
-                                    ml {!! $meal->feed_type == 'breast' ? '<i class="fa fa-user-o text-success" aria-hidden="true"></i>' : '' !!}</td>
-                            </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
+                <div class="col-6" id="today-meals-table">
+                    @include('sub.meals_table', ['meal_list' => $today_meals])
                 </div>
                 <div class="col-6">
-                    <table class="table table-sm">
-                        <thead>
-                        <tr>
-                            <th colspan="2">Yesterday</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach ($yesterday_meals as $meal)
-                            <tr>
-                                <th scope="row">{{ (new Carbon($meal->at))->format('H:i') }}</th>
-                                <td>{{ $meal->value }}ml</td>
-                            </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
+                    @include('sub.meals_table', ['meal_list' => $yesterday_meals])
                 </div>
             </div>
         </div>
         <div class="tab-pane" id="sleep" role="tabpanel">
             <!-- Sleep -->
-            <div class="row"> <!-- current value header -->
-                <div class="col-6 text-center">
-                    Today so far
-                </div>
-                <div class="col-6 text-center">
-                    wake up @
-                    <mark id="last-meal-time">{{ (new Carbon($last_sleep->wake))->format('H:i') }}</mark>
-                </div>
+            <div id="sleep-snapshot">
+                @include('sub.sleep_snapshot')
             </div>
-            <div class="row"> <!-- current values -->
-                <div class="col-6 text-center">
-                    <label id="today-sleep-value-hour" class="display-3 text-info">{{ $sleep->hours }}h</label>
-                    <br/><label id="today-sleep-value-minute" class="display-4 text-info">{{ $sleep->minutes }}m</label>
-                </div>
-                <div class="col-6 text-center">
-                    <label id="last-sleep-value-hour" class="display-3">{{ $last_sleep->hours }}h</label>
-                    <br/><label id="last-sleep-value-minute" class="display-4">{{ $last_sleep->minutes }}m</label>
-                </div>
+            <div id="sleep-status">
+                @include('sub.sleep_status')
             </div>
-            @if (!empty($sleeping_record))
-                <div class="row"> <!-- current sleeping status -->
-                    <div class="col-12 text-center">
-                        <p class="lead">sleeping from
-                            <mark
-                                    id="sleep-from">{{ (new Carbon($sleeping_record->sleep))->format('H:i') }}</mark>
-                        </p>
-                    </div>
-                </div>
-                <div class="row"><!-- wake up buttons -->
-                    <div class="col-5 push-1">
-                        <button id="sleep-button" type="button"
-                                class="btn btn-success btn-block"
-                                data-toggle="modal" data-target="#wakeUpModal"><i class="fa fa-sun-o"
-                                                                                  aria-hidden="true"></i> wake up
-                        </button>
-                    </div>
-                    <div class="col-5 push-1">
-                        <button id="cancel-sleep-button" type="button" class="btn btn-danger btn-block"><i
-                                    class="fa fa-minus-square" aria-hidden="true"></i> cancel
-                        </button>
-                    </div>
-                </div>
-            @else
-                <div class="row">
-                    <div class="col-6 push-3">
-                        <button id="sleep-button" type="button"
-                                class="btn btn-primary btn-block"
-                                data-toggle="modal" data-target="#addSleepModal"><i class="fa fa-moon-o"
-                                                                                    aria-hidden="true"></i> sleep
-                        </button>
-                    </div>
-                </div>
-            @endif
             <div class="row"> <!-- Sleep today vs yesterday -->
-                <div class="col-6">
-                    <table class="table table-sm">
-                        <thead>
-                        <tr>
-                            <th colspan="2">Today</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach ($today_sleeps as $sleep)
-                            <tr>
-                                <th scope="row">{{ (new Carbon($sleep->sleep))->format('H:i') }}</th>
-                                <td>{{  $sleep->hours }}h {{ $sleep->minutes }}m</td>
-                            </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
+                <div class="col-6" id="today-sleep-table">
+                    @include('sub.sleeps_table', ['sleep_list' => $today_sleeps])
                 </div>
                 <div class="col-6">
-                    <table class="table table-sm">
-                        <thead>
-                        <tr>
-                            <th colspan="2">Yesterday</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach ($yesterday_sleeps as $sleep)
-                            <tr>
-                                <th scope="row">{{ (new Carbon($sleep->sleep))->format('H:i') }}</th>
-                                <td>{{  $sleep->hours }}h {{ $sleep->minutes }}m</td>
-                            </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
+                    @include('sub.sleeps_table', ['sleep_list' => $yesterday_sleeps])
                 </div>
             </div>
         </div>
@@ -285,8 +163,10 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="meal-time-input" class="sr-only">Time</label>
-                        <div class="input-group clockpicker" data-placement="right" data-align="top" data-autoclose="true">
-                            <input id="meal-time-input" type="text" class="form-control" value="{{ Carbon::now()->format('H:i') }}">
+                        <div class="input-group clockpicker" data-placement="right" data-align="top"
+                             data-autoclose="true">
+                            <input id="meal-time-input" type="text" class="form-control"
+                                   value="{{ Carbon::now()->format('H:i') }}">
                             <span class="input-group-addon"><i class="fa fa-clock-o" aria-hidden="true"></i></span>
                         </div>
                     </div>
@@ -335,8 +215,10 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="meal-time-input" class="sr-only">Time</label>
-                        <div class="input-group clockpicker" data-placement="right" data-align="top" data-autoclose="true">
-                            <input id="sleep-time-input" type="text" class="form-control" value="{{ Carbon::now()->format('H:i') }}">
+                        <div class="input-group clockpicker" data-placement="right" data-align="top"
+                             data-autoclose="true">
+                            <input id="sleep-time-input" type="text" class="form-control"
+                                   value="{{ Carbon::now()->format('H:i') }}">
                             <span class="input-group-addon"><i class="fa fa-clock-o" aria-hidden="true"></i></span>
                         </div>
                     </div>
@@ -362,8 +244,10 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="meal-time-input" class="sr-only">Time</label>
-                        <div class="input-group clockpicker" data-placement="right" data-align="top" data-autoclose="true">
-                            <input id="wake-time-input" type="text" class="form-control" value="{{ Carbon::now()->format('H:i') }}">
+                        <div class="input-group clockpicker" data-placement="right" data-align="top"
+                             data-autoclose="true">
+                            <input id="wake-time-input" type="text" class="form-control"
+                                   value="{{ Carbon::now()->format('H:i') }}">
                             <span class="input-group-addon"><i class="fa fa-clock-o" aria-hidden="true"></i></span>
                         </div>
                     </div>
@@ -403,7 +287,7 @@
             $.post("{{ route('Ajax.CloseNotification') }}", {id: $(this).find('input').val()});
         });
 
-        //-- saving weight
+        //-- saving weight & height
         $('#changeWeightModal').find('button.btn-primary').on('click', function () {
             $(this).append('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>')
             $(this).off('click');
@@ -411,7 +295,10 @@
                 weight: $('#weight-input').val(),
                 height: $('#height-input').val()
             }, function () {
-                location.reload();
+                $('#age-weight-height').load('{!! route('Ajax.LoadAgeWeightHeightView') !!}');
+
+                $('#changeWeightModal').find('button.btn-primary').empty().text('Save');
+                $('#changeWeightModal').modal('hide');
             });
         });
 
@@ -424,7 +311,11 @@
                 type: $('#bottle-fed').prop("checked") ? $('#bottle-fed').attr('value') : $('#breast-fed').attr('value'),
                 at: $('#meal-time-input').val()
             }, function () {
-                location.reload();
+                $('#meal-snapshot').load('{!! route('Ajax.LoadMealSnapshotView') !!}');
+                $('#today-meals-table').load('{!! route('Ajax.LoadTodayMealsView') !!}');
+
+                $('#addMealModal').find('button.btn-primary').empty().text('Save');
+                $('#addMealModal').modal('hide');
             });
         });
 
@@ -432,21 +323,35 @@
         function sleepClick() {
             $(this).append('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>')
             $(this).off('click');
+
             $.post("{{ route('Ajax.ToggleSleep') }}", {
                 sleep_time: $('#sleep-time-input').val(),
                 wake_time: $('#wake-time-input').val()
-            }, function () {
-                location.reload();
+            }, function (data) {
+                $('#sleep-status').load('{!! route('Ajax.LoadSleepStatusView') !!}');
+
+                if (data.sleeping) { // from wake to sleep
+                    $('#addSleepModal').find('button.btn-primary').empty().text('Save');
+                    $('#addSleepModal').modal('hide');
+                }
+                else { // from sleep to wake
+                    $('#sleep-snapshot').load('{!! route('Ajax.LoadSleepSnapshotView') !!}');
+                    $('#today-sleep-table').load('{!! route('Ajax.LoadTodaySleepsView') !!}');
+
+                    $('#wakeUpModal').find('button.btn-primary').empty().text('Save');
+                    $('#wakeUpModal').modal('hide');
+                }
             });
         };
         $('#addSleepModal').find('button.btn-primary').on('click', sleepClick);
         $('#wakeUpModal').find('button.btn-primary').on('click', sleepClick);
-        $('#cancel-sleep-button').on('click', function () {
-            $(this).append('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>')
-            $(this).off('click');
+
+        function cancelSleepClick() {
+            $('#cancel-sleep-button').append('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>')
+            $('#cancel-sleep-button').off('click');
             $.post("{{ route('Ajax.CancelSleep') }}", {}, function () {
-                location.reload();
+                $('#sleep-status').load('{!! route('Ajax.LoadSleepStatusView') !!}');
             });
-        })
+        }
     </script>
 @endsection

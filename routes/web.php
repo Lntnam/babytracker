@@ -25,6 +25,13 @@ Route::post('ajax/toggle_sleep', 'AjaxController@toggleSleep')->name('Ajax.Toggl
 
 Route::post('ajax/cancel_sleep', 'AjaxController@cancelSleep')->name('Ajax.CancelSleep');
 
+Route::get('ajax/load_sleep_status_view', 'AjaxController@loadSleepStatusView')->name('Ajax.LoadSleepStatusView');
+Route::get('ajax/load_awh_view', 'AjaxController@loadAgeWeightHeightView')->name('Ajax.LoadAgeWeightHeightView');
+Route::get('ajax/load_today_meals_view', 'AjaxController@loadTodayMealsView')->name('Ajax.LoadTodayMealsView');
+Route::get('ajax/load_meal_snapshot_view', 'AjaxController@loadMealSnapshotView')->name('Ajax.LoadMealSnapshotView');
+Route::get('ajax/load_today_sleeps_view', 'AjaxController@loadTodaySleepsView')->name('Ajax.LoadTodaySleepsView');
+Route::get('ajax/load_sleep_snapshot_view', 'AjaxController@loadSleepSnapshotView')->name('Ajax.LoadSleepSnapshotView');
+
 Route::get('/meal', 'MealReportController@index')->name('MealReport');
 
 Route::get('/weight', 'WeightReportController@index')->name('WeightReport');
