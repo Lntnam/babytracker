@@ -36,9 +36,6 @@ class HomeController extends Controller
         $today_sleeps = SleepRepository::getSleepsOnDate($current_date);
         $yesterday_sleeps = SleepRepository::getSleepsOnDate((new Carbon($current_date))->subDay()->toDateString());
 
-        // End day eligibility
-        $day_record = DayRecordRepository::getDayRecord($current_date);
-
         return view('home', [
             'notifications' => $notifications,
             'weight' => $weight,
@@ -55,7 +52,7 @@ class HomeController extends Controller
             'today_sleeps' => $today_sleeps,
             'yesterday_sleeps' => $yesterday_sleeps,
 
-            'can_close' => ($day_record == null || $day_record->meal == null),
+            'can_close' => Carbon::today()->gt(new Carbon($current_date)),
             'current_date' => $current_date,
         ]);
     }
