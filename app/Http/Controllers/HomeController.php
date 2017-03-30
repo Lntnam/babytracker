@@ -16,46 +16,29 @@ class HomeController extends Controller
     {
         $current_date = DayRecordRepository::getCurrentDate();
 
-        // Get notifications
-        $notifications = NotificationRepository::getAllUnread();
-
         // Current values
         $dob = new Carbon(config('settings.baby_dob'));
         $age = CarbonInterval::days($dob->diffInDays(new Carbon($current_date)));
 
-        $weight = WeightRepository::getCurrentWeight();
-        $height = WeightRepository::getCurrentHeight();
-        $meal = MealRepository::getTodayTotalMealAmount();
         $sleep = SleepRepository::getTodayTotalSleepAmount();
         $sleep = CarbonInterval::hours(floor($sleep / 60))->minute($sleep % 60);
 
-        // Last meal
-        $last_meal = MealRepository::getLastMeal();
-        $today_meals = MealRepository::getMealsOnDate($current_date);
-        $yesterday_meals = MealRepository::getMealsOnDate((new Carbon($current_date))->subDay()->toDateString());
-
-        // Sleep from
-        $sleeping_record = SleepRepository::getCurrentSleepingRecord();
-        $last_sleep = SleepRepository::getLatestSleep();
-        $today_sleeps = SleepRepository::getSleepsOnDate($current_date);
-        $yesterday_sleeps = SleepRepository::getSleepsOnDate((new Carbon($current_date))->subDay()->toDateString());
-
         return view('home', [
-            'notifications' => $notifications,
-            'weight' => $weight,
-            'height' => $height,
+            'notifications' => NotificationRepository::getAllUnread(),
+            'weight' => WeightRepository::getCurrentWeight(),
+            'height' => WeightRepository::getCurrentHeight(),
             'age' => $age,
 
-            'meal' => $meal,
-            'last_meal' => $last_meal,
-            'today_meals' => $today_meals,
-            'yesterday_meals' => $yesterday_meals,
+            'meal' => MealRepository::getTodayTotalMealAmount(),
+            'last_meal' => MealRepository::getLastMeal(),
+            'today_meals' => MealRepository::getMealsOnDate($current_date),
+            'yesterday_meals' => MealRepository::getMealsOnDate((new Carbon($current_date))->subDay()->toDateString()),
 
             'sleep' => $sleep,
-            'sleeping_record' => $sleeping_record,
-            'last_sleep' => $last_sleep,
-            'today_sleeps' => $today_sleeps,
-            'yesterday_sleeps' => $yesterday_sleeps,
+            'sleeping_record' => SleepRepository::getCurrentSleepingRecord(),
+            'last_sleep' => SleepRepository::getLatestSleep(),
+            'today_sleeps' => SleepRepository::getSleepsOnDate($current_date),
+            'yesterday_sleeps' => SleepRepository::getSleepsOnDate((new Carbon($current_date))->subDay()->toDateString()),
 
             'can_close' => Carbon::today()->gt(new Carbon($current_date)),
             'current_date' => $current_date,
