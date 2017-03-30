@@ -18,8 +18,8 @@ class CreateDayRecordsTable extends Migration
             $table->date('day');
             $table->integer('sleep');
             $table->integer('meal');
-            $table->decimal('weight');
-            $table->integer('height');
+            $table->decimal('weight')->nullable();
+            $table->integer('height')->nullable();
 
             $table->primary('day');
         });
