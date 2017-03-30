@@ -252,7 +252,7 @@
                     <div class="form-group">
                         <label for="weight-input" class="sr-only">Weight in kg</label>
                         <div class="input-group">
-                            <input class="form-control focus" type="text" value="{{ $weight }}" id="weight-input"
+                            <input class="form-control focus" type="number" value="{{ $weight }}" id="weight-input"
                                    placeholder="Weight in kg">
                             <div class="input-group-addon">kg</div>
                         </div>
@@ -260,7 +260,7 @@
                     <div class="form-group">
                         <label for="weight-input" class="sr-only">Height in cm</label>
                         <div class="input-group">
-                            <input class="form-control focus" type="text" value="{{ $height }}" id="height-input"
+                            <input class="form-control focus" type="number" value="{{ $height }}" id="height-input"
                                    placeholder="Height in cm">
                             <div class="input-group-addon">cm</div>
                         </div>
@@ -287,14 +287,13 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="meal-time-input" class="sr-only">Time</label>
-                        <input class="form-control" type="time" type="text" value="{{ Carbon::now()->format('H:i') }}"
+                        <input class="form-control" type="time" value="{{ Carbon::now()->format('H:i') }}"
                                id="meal-time-input">
                     </div>
                     <div class="form-group">
                         <label for="meal-input" class="sr-only">ml</label>
                         <div class="input-group">
-                            <input class="form-control" type="text" value="" id="meal-input"
-                                   placeholder="Amount in ml">
+                            <input class="form-control" type="number" id="meal-input" placeholder="Amount in ml">
                             <div class="input-group-addon">ml</div>
                         </div>
                     </div>
@@ -336,7 +335,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="meal-time-input" class="sr-only">Time</label>
-                        <input class="form-control" type="time" type="text" value="{{ Carbon::now()->format('H:i') }}"
+                        <input class="form-control" type="time" value="{{ Carbon::now()->format('H:i') }}"
                                id="sleep-time-input">
                     </div>
                 </div>
@@ -361,7 +360,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="meal-time-input" class="sr-only">Time</label>
-                        <input class="form-control" type="time" type="text" value="{{ Carbon::now()->format('H:i') }}"
+                        <input class="form-control" type="time" value="{{ Carbon::now()->format('H:i') }}"
                                id="wake-time-input">
                     </div>
                 </div>
