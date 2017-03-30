@@ -28,7 +28,7 @@ class WeightRepository
     }
 
     public static function setCurrentHeight($value) {
-        return VariableRepository::setCurrentValue('weight', (int)$value);
+        return VariableRepository::setCurrentValue('height', (int)$value);
     }
 
     public static function updateWeightHeight($weight, $height) {
