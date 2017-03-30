@@ -19,8 +19,7 @@ class CreateDayRecordsTable extends Migration
             $table->integer('sleep');
             $table->integer('meal');
             $table->decimal('weight');
-            $table->integer('poop');
-            $table->integer('pee');
+            $table->integer('height');
 
             $table->primary('day');
         });
