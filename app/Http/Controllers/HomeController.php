@@ -14,20 +14,20 @@ class HomeController extends Controller
 {
     public function index()
     {
+        $current_date = DayRecordRepository::getCurrentDate();
+
         // Get notifications
         $notifications = NotificationRepository::getAllUnread();
 
         // Current values
-        $today = DayRecordRepository::getCurrentDate();
         $dob = new Carbon(config('settings.baby_dob'));
-        $age = CarbonInterval::days($dob->diffInDays(new Carbon($today)));
+        $age = CarbonInterval::days($dob->diffInDays(new Carbon($current_date)));
 
         $weight = WeightRepository::getCurrentWeight();
         $height = WeightRepository::getCurrentHeight();
         $meal = MealRepository::getTodayTotalMealAmount();
         $sleep = SleepRepository::getTodayTotalSleepAmount();
         $sleep = CarbonInterval::hours(floor($sleep / 60))->minute($sleep % 60);
-        $current_date = DayRecordRepository::getCurrentDate();
 
         // Last meal
         $last_meal = MealRepository::getLastMeal();
