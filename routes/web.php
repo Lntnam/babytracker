@@ -17,7 +17,7 @@ Route::get('/close', 'HomeController@close')->name('CloseDay');
 
 Route::post('ajax/close_notification', 'AjaxController@closeNotification')->name('Ajax.CloseNotification');
 
-Route::post('ajax/save_weight', 'AjaxController@saveWeight')->name('Ajax.SaveWeight');
+Route::post('ajax/save_measurements', 'AjaxController@saveMeasurements')->name('Ajax.SaveMeasurements');
 
 Route::post('ajax/add_meal', 'AjaxController@addMeal')->name('Ajax.AddMeal');
 

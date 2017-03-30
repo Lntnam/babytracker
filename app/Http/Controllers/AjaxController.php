@@ -17,12 +17,14 @@ class AjaxController extends Controller
         return response()->json(!empty($notification) ? 1 : 0);
     }
 
-    public function saveWeight(Request $request)
+    public function saveMeasurements(Request $request)
     {
-        $value = $request->input('value');
+        $weight = $request->input('weight');
+        $height = $request->input('height');
 
-        WeightRepository::setCurrentWeight($value);
-        return $value;
+        WeightRepository::updateWeightHeight($weight, $height);
+        WeightRepository::setCurrentWeight($weight);
+        WeightRepository::setCurrentHeight($height);
     }
 
     public function addMeal(Request $request) {

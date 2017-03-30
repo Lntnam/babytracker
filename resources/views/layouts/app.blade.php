@@ -42,9 +42,6 @@
                 <a class="nav-link" href="{!! route('WeightReport') !!}"><i class="fa fa-line-chart"
                                                                             aria-hidden="true"></i> Weight Report</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#"><i class="fa fa-balance-scale" aria-hidden="true"></i> Weight & Height</a>
-            </li>
         </ul>
     </div>
 </nav>

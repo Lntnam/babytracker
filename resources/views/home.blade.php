@@ -3,11 +3,22 @@
 @section('title', 'Dashboard')
 
 @section('content')
-    <h5>{{ (new Carbon($current_date))->toFormattedDateString() }}
-        <span class="badge badge-primary">{{ $age->weeks . 'w ' . $age->daysExcludeWeeks . 'd' }}</span>
-        <span class="badge badge-info">{{ $weight }}kg</span>
-        <span class="badge badge-info">{{ $height }}cm</span>
-    </h5>
+    <div class="row">
+        <div class="col-3">
+            <h5>{{ (new Carbon($current_date))->format('M j') }}</h5>
+        </div>
+        <div class="col-7">
+            <h5>
+                <span class="badge badge-success">{{ $age->weeks . 'w ' . $age->daysExcludeWeeks . 'd' }}</span>
+                <span class="badge badge-info">{{ $weight }}kg</span>
+                <span class="badge badge-info">{{ $height }}cm</span>
+            </h5>
+        </div>
+        <div class="col-1">
+            <button type="button" role="button" class="btn btn-sm" data-toggle="modal"
+                    data-target="#changeWeightModal"><i class="fa fa-balance-scale" aria-hidden="true"></i></button>
+        </div>
+    </div>
 
     <!-- notifications -->
     @if (!empty($notifications))
@@ -246,6 +257,14 @@
                             <div class="input-group-addon">kg</div>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label for="weight-input" class="sr-only">Height in cm</label>
+                        <div class="input-group">
+                            <input class="form-control focus" type="text" value="{{ $height }}" id="height-input"
+                                   placeholder="Height in cm">
+                            <div class="input-group-addon">cm</div>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -372,10 +391,11 @@
         $('#changeWeightModal').find('button.btn-primary').on('click', function () {
             $(this).append('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>')
             $(this).off('click');
-            $.post("{{ route('Ajax.SaveWeight') }}", {value: $('#weight-input').val()}, function (data) {
-                if (data != '-1') {
-                    location.reload();
-                }
+            $.post("{{ route('Ajax.SaveMeasurements') }}", {
+                weight: $('#weight-input').val(),
+                height: $('#height-input').val()
+            }, function () {
+                location.reload();
             });
         });
 
