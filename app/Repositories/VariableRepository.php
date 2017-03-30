@@ -30,7 +30,8 @@ class VariableRepository
         if (!empty($var)) {
             $var_array = json_decode($var->value);
 
-            return $var_array->$key;
+            if (isset($var_array->$key))
+                return $var_array->$key;
         }
         return null;
     }
