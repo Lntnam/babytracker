@@ -23,6 +23,7 @@ class VariablesSeeder extends Seeder
             'name' => 'currents',
             'value' => json_encode([
                 'weight' => 0,
+                'height' => 0,
                 'date' => \Carbon\Carbon::today()->toDateString(),
             ]),
         ]);
