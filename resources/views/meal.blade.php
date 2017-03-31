@@ -53,7 +53,7 @@
 @section('scripts')
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
-        google.charts.load('current', {'packages': ['corechart', 'bar']});
+        google.charts.load('current', {'packages': ['corechart']});
         google.charts.setOnLoadCallback(drawCharts);
 
         function drawCharts() {
@@ -76,9 +76,10 @@
                 hAxis: {
                     title: 'Age (days)',
                     format: '#0',
-                    maxValue: {{ (new Carbon($dob))->diffInDays(\Carbon\Carbon::today()->addDay(2)) }}
+                    maxValue: {{ (new Carbon($dob))->diffInDays(\Carbon\Carbon::today()->addDay()) }}
                 },
                 legend: {position: 'none'},
+                colors: ['#1565C0'],
                 chartArea: {left: '10%', top: '5%', width: '85%', height: '80%'},
                 trendlines: {
                     0: {
@@ -90,13 +91,14 @@
                 vAxis: {title: 'Intake Median (ml)'},
                 hAxis: {title: 'Time of day'},
                 legend: {position: 'none'},
+                colors: ['#1E88E5'],
                 chartArea: {left: '10%', top: '5%', width: '85%', height: '80%'},
             };
 
             var daily_intake_chart = new google.visualization.ScatterChart(document.getElementById('daily-intake-chart'));
-            var time_comparison_chart = new google.charts.Bar(document.getElementById('time-comparison-chart'));
+            var time_comparison_chart = new google.visualization.ColumnChart(document.getElementById('time-comparison-chart'));
             daily_intake_chart.draw(daily_intake_data, scatter_options);
-            time_comparison_chart.draw(time_comparison_data, google.charts.Bar.convertOptions(column_options));
+            time_comparison_chart.draw(time_comparison_data, column_options);
         }
     </script>
 @endsection
