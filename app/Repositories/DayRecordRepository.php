@@ -34,10 +34,10 @@ class DayRecordRepository
             $record->day = $date;
         }
         else {
-            if ($sleep == null) $sleep = $record->sleep;
-            if ($meal == null) $meal = $record->meal;
-            if ($weight == null) $weight = $record->weight;
-            if ($height == null) $height = $record->height;
+            if ($sleep === null) $sleep = $record->sleep;
+            if ($meal === null) $meal = $record->meal;
+            if ($weight === null) $weight = $record->weight;
+            if ($height === null) $height = $record->height;
         }
 
         $record->weight = $weight;

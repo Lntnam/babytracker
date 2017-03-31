@@ -2,8 +2,6 @@
 
 namespace App\Providers;
 
-use Carbon\Carbon;
-use Carbon\CarbonInterval;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 

@@ -9,9 +9,7 @@
 namespace App\Repositories;
 
 use App\Models\DayRecord;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
-
 
 class WeightRepository
 {
