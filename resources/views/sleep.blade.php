@@ -7,8 +7,6 @@
         <h4>Sleep Reports</h4>
     </div>
 
-    <!-- ################## -->
-    <!-- PAST 10 DAYS -->
     <h5 class="text-center">Daily Total Sleep</h5>
 
     <div class="row">
@@ -107,7 +105,8 @@
             var ten_day_data = google.visualization.arrayToDataTable([
                 ['Age', 'Amount'],
                     @foreach ($past_records as $record)
-                [{{ (new Carbon($dob))->diffInDays(new Carbon($record->day))  }}, {{ $record->sleep }}],
+                [{{ (new Carbon($dob))->diffInDays(new Carbon($record->day))  }},
+                    [{{ floor($record->sleep / 60) }}, {{ $record->sleep % 60 }}, 0]],
                 @endforeach
             ]);
 
@@ -118,14 +117,17 @@
             };
 
             var options = {
-                vAxis: {title: 'Sleep Time (minutes)'},
+                vAxis: {
+                    title: 'Sleep Duration',
+                    format: 'HH:mm',
+                },
                 hAxis: {
                     title: 'Age (days)',
                     format: '#0',
-                    maxValue: {{ (new Carbon($dob))->diffInDays(\Carbon\Carbon::today()->addDay(2)) }}
+                    maxValue: {{ (new Carbon($dob))->diffInDays(\Carbon\Carbon::today()->addDay()) }}
                 },
                 legend: 'none',
-                chartArea: {left: '15%', top: '10%', width: '85%', height: '80%'},
+                chartArea: {left: '15%', top: '5%', width: '80%', height: '80%'},
                 trendlines: {0: {
                     type: 'exponential'
                 }}
