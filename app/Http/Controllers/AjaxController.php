@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Sleep;
 use App\Repositories\DayRecordRepository;
 use App\Repositories\MealRepository;
 use App\Repositories\NotificationRepository;
 use App\Repositories\SleepRepository;
 use App\Repositories\WeightRepository;
+use Carbon\Carbon;
 use Carbon\CarbonInterval;
 use Illuminate\Http\Request;
 
