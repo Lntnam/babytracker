@@ -304,6 +304,9 @@
 @section('scripts')
     <script type="text/javascript" src="{{ asset('js/bootstrap-clockpicker.min.js') }}"></script>
     <script type="text/javascript">
+        var timeout_id;
+        var autotask_checker = 0;
+
         $(document).ready(function () {
             var clockpicker_options = {
                 default: 'now',
@@ -314,32 +317,31 @@
             $('#wake-time-input').clockpicker(clockpicker_options);
 
             //-- auto reload
-            setInterval(function () {
-                $('#age-weight-height').load('{!! route('Ajax.LoadAgeWeightHeightView') !!}');
-                $('#meal-snapshot').load('{!! route('Ajax.LoadMealSnapshotView') !!}');
-                $('#today-meals-table').load('{!! route('Ajax.LoadTodayMealsView') !!}');
-                $('#sleep-status').load('{!! route('Ajax.LoadSleepStatusView') !!}');
-                $('#sleep-snapshot').load('{!! route('Ajax.LoadSleepSnapshotView') !!}');
-                $('#today-sleep-table').load('{!! route('Ajax.LoadTodaySleepsView') !!}');
-            }, 3000);
+            autoload();
 
             //-- closing alerts
             $('.alert').on('closed.bs.alert', function () {
-                $.post("{{ route('Ajax.CloseNotification') }}", {id: $(this).find('input').val()});
+                $.post("{{ route('Ajax.CloseNotification') }}", {id: $(this).find('input').val()}, function () {
+                    console.log('CloseNotification returned.');
+                });
             });
 
             //-- saving weight & height
             $('#changeWeightModal').find('button.btn-primary').on('click', function () {
                 $(this).append('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>')
                 $(this).off('click');
+                clearTimeout(timeout_id);
                 $.post("{{ route('Ajax.SaveMeasurements') }}", {
                     weight: $('#weight-input').val(),
                     height: $('#height-input').val()
                 }, function () {
-                    $('#age-weight-height').load('{!! route('Ajax.LoadAgeWeightHeightView') !!}');
+                    console.log('SaveMeasurements returned.');
 
-                    $('#changeWeightModal').find('button.btn-primary').empty().text('Save');
-                    $('#changeWeightModal').modal('hide');
+                    $('#age-weight-height').load('{!! route('Ajax.LoadAgeWeightHeightView') !!}', function() {
+                        $('#changeWeightModal').find('button.btn-primary').empty().text('Save');
+                        $('#changeWeightModal').modal('hide');
+                        autoload();
+                    });
                 });
             });
 
@@ -347,16 +349,21 @@
             $('#addMealModal').find('button.btn-primary').on('click', function () {
                 $(this).append('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>')
                 $(this).off('click');
+                clearTimeout(timeout_id);
                 $.post("{{ route('Ajax.AddMeal') }}", {
                     value: $('#meal-input').val(),
                     type: $('#bottle-fed').prop("checked") ? $('#bottle-fed').attr('value') : $('#breast-fed').attr('value'),
                     at: $('#meal-time-input').val()
                 }, function () {
-                    $('#meal-snapshot').load('{!! route('Ajax.LoadMealSnapshotView') !!}');
-                    $('#today-meals-table').load('{!! route('Ajax.LoadTodayMealsView') !!}');
+                    console.log('AddMeal returned.');
 
-                    $('#addMealModal').find('button.btn-primary').empty().text('Save');
-                    $('#addMealModal').modal('hide');
+                    $('#meal-snapshot').load('{!! route('Ajax.LoadMealSnapshotView') !!}', function() {
+                        $('#today-meals-table').load('{!! route('Ajax.LoadTodayMealsView') !!}', function() {
+                            $('#addMealModal').find('button.btn-primary').empty().text('Save');
+                            $('#addMealModal').modal('hide');
+                            autoload();
+                        });
+                    });
                 });
             });
             $('#addSleepModal').find('button.btn-primary').on('click', sleepClick);
@@ -367,33 +374,64 @@
         function sleepClick() {
             $(this).append('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>')
             $(this).off('click');
-
+            clearTimeout(timeout_id);
             $.post("{{ route('Ajax.ToggleSleep') }}", {
                 sleep_time: $('#sleep-time-input').val(),
                 wake_time: $('#wake-time-input').val()
             }, function (data) {
-                $('#sleep-status').load('{!! route('Ajax.LoadSleepStatusView') !!}');
+                console.log('ToggleSleep returned:');
+                console.log(data);
 
-                if (data.sleeping) { // from wake to sleep
-                    $('#addSleepModal').find('button.btn-primary').empty().text('Save');
-                    $('#addSleepModal').modal('hide');
-                }
-                else { // from sleep to wake
-                    $('#sleep-snapshot').load('{!! route('Ajax.LoadSleepSnapshotView') !!}');
-                    $('#today-sleep-table').load('{!! route('Ajax.LoadTodaySleepsView') !!}');
+                $('#sleep-status').load('{!! route('Ajax.LoadSleepStatusView') !!}', function() {
+                    if (data.sleeping) { // from wake to sleep
+                        $('#addSleepModal').find('button.btn-primary').empty().text('Save');
+                        $('#addSleepModal').modal('hide');
+                        autoload();
+                    }
+                    else { // from sleep to wake
+                        $('#sleep-snapshot').load('{!! route('Ajax.LoadSleepSnapshotView') !!}', function() {
+                            $('#today-sleep-table').load('{!! route('Ajax.LoadTodaySleepsView') !!}', function() {
+                                $('#wakeUpModal').find('button.btn-primary').empty().text('Save');
+                                $('#wakeUpModal').modal('hide');
+                                autoload();
+                            });
+                        });
 
-                    $('#wakeUpModal').find('button.btn-primary').empty().text('Save');
-                    $('#wakeUpModal').modal('hide');
-                }
+                    }
+                });
             });
         };
 
         function cancelSleepClick() {
             $('#cancel-sleep-button').append('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>')
             $('#cancel-sleep-button').off('click');
+            clearTimeout(timeout_id);
             $.post("{{ route('Ajax.CancelSleep') }}", {}, function () {
-                $('#sleep-status').load('{!! route('Ajax.LoadSleepStatusView') !!}');
+                console.log('CancelSleep returned.');
+
+                $('#sleep-status').load('{!! route('Ajax.LoadSleepStatusView') !!}', function() {
+                    autoload();
+                });
             });
+        }
+
+        function autoload() {
+            timeout_id = setTimeout(function () {
+                $('#age-weight-height').load('{!! route('Ajax.LoadAgeWeightHeightView') !!}', function() {autotask_check(Math.pow(2, 0))});
+                $('#meal-snapshot').load('{!! route('Ajax.LoadMealSnapshotView') !!}', function() {autotask_check(Math.pow(2, 1))});
+                $('#today-meals-table').load('{!! route('Ajax.LoadTodayMealsView') !!}', function() {autotask_check(Math.pow(2, 2))});
+                $('#sleep-status').load('{!! route('Ajax.LoadSleepStatusView') !!}', function() {autotask_check(Math.pow(2, 3))});
+                $('#sleep-snapshot').load('{!! route('Ajax.LoadSleepSnapshotView') !!}', function() {autotask_check(Math.pow(2, 4))});
+                $('#today-sleep-table').load('{!! route('Ajax.LoadTodaySleepsView') !!}', function() {autotask_check(Math.pow(2, 5))});
+            }, 3000);
+        }
+
+        function autotask_check(value) {
+            autotask_checker += value;
+            if (autotask_checker == Math.pow(2, 6) - 1) {
+                autotask_checker = 0;
+                autoload();
+            }
         }
     </script>
 @endsection
