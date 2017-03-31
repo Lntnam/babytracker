@@ -19,15 +19,15 @@ class SleepReportController extends Controller
 
     public function index()
     {
-        // Past 10 days
-        $records = DayRecordRepository::getPastRecords(10);
+        // Past 28 days
+        $records = DayRecordRepository::getPastRecords(28);
 
-        // 10 days sleep analysis
-        $sleeps = SleepRepository::getPastRecords(10);
+        // 28 days sleep analysis
+        $sleeps = SleepRepository::getPastRecords(28);
 
         $analysis_by_block = [];
-        foreach ($this->blocks as $key => $list) {
-            $analysis_by_block[$key] = [
+        foreach ($this->blocks as $block_name => $list) {
+            $analysis_by_block[$block_name] = [
                 'sleep_sum' => 0, // for percentage
                 'awake_sum' => 0, // for percentage
                 'sleep_list' => [],
@@ -56,7 +56,11 @@ class SleepReportController extends Controller
                 $analysis_by_block[$block[0]]['sleep_sum'] += $block[1];
             }
             // Sleep duration list for median calculation
-            $analysis_by_block[$sleep_breakdown[0][0]]['sleep_list'][] = $sleep_duration;
+            if (isset($analysis_by_block[$sleep_breakdown[0][0]]['sleep_list'][$sleep->on])) {
+                $analysis_by_block[$sleep_breakdown[0][0]]['sleep_list'][$sleep->on] += $sleep_duration;
+            } else {
+                $analysis_by_block[$sleep_breakdown[0][0]]['sleep_list'][$sleep->on] = $sleep_duration;
+            }
 
             // Awake
             if ($awake_time !== null) {
@@ -67,20 +71,25 @@ class SleepReportController extends Controller
                 foreach ($awake_breakdown as $block) {
                     $analysis_by_block[$block[0]]['awake_sum'] += $block[1];
                 }
-                $analysis_by_block[$awake_breakdown[0][0]]['awake_list'][] = $awake_duration;
+                if (isset($analysis_by_block[$awake_breakdown[0][0]]['awake_list'][$sleep->on])) {
+                    $analysis_by_block[$awake_breakdown[0][0]]['awake_list'][$sleep->on] += $awake_duration;
+                } else {
+                    $analysis_by_block[$awake_breakdown[0][0]]['awake_list'][$sleep->on] = $awake_duration;
+                }
             }
             $awake_time = $end->copy();
         }
 
         // analysis calculation
         foreach ($analysis_by_block as $key => $data) {
-            $analysis_by_block[$key]['sleep_median'] = CarbonInterval::minutes(round(Utilities::findArrayMedian($analysis_by_block[$key]['sleep_list'])));
-            $analysis_by_block[$key]['awake_median'] = CarbonInterval::minutes(round(Utilities::findArrayMedian($analysis_by_block[$key]['awake_list'])));
+            $analysis_by_block[$key]['sleep_median'] = CarbonInterval::minutes(round(Utilities::findArrayMedian(array_values($analysis_by_block[$key]['sleep_list']))));
+            $analysis_by_block[$key]['awake_median'] = CarbonInterval::minutes(round(Utilities::findArrayMedian(array_values($analysis_by_block[$key]['awake_list']))));
         }
 
         return view('sleep', [
             'past_records' => $records,
             'analysis' => $analysis_by_block,
+            'dob' => new Carbon(config('settings.baby_dob')),
         ]);
     }
 
@@ -89,14 +98,14 @@ class SleepReportController extends Controller
      * @param int $total_minutes
      * @return array
      */
-    private function calculateBlockDuration($start_hour, $total_minutes) {
+    private function calculateBlockDuration($start_hour, $total_minutes)
+    {
         foreach ($this->blocks as $key => $list) {
             $index = array_search($start_hour, $list);
             if ($index !== false) {
                 if ($total_minutes <= (count($list) - $index) * 60) { // whole duration is within the time block
                     return [[$key, $total_minutes]];
-                }
-                else { // whole duration is split between several time blocks
+                } else { // whole duration is split between several time blocks
                     $minutes = (count($list) - $index) * 60;
                     $result = [[$key, $minutes]];
                     $next_hour = Carbon::today()->addHour($start_hour + 1);

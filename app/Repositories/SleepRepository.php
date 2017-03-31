@@ -74,7 +74,7 @@ class SleepRepository
     public static function getPastRecords($no_of_days)
     {
         $today = new Carbon(DayRecordRepository::getCurrentDate());
-        $date = $today->subDay($no_of_days - 1);
+        $date = $today->copy()->subDay($no_of_days - 1);
 
         return Sleep::whereBetween('on', [$date->toDateString(), $today->toDateString()])
             ->whereNotNull('wake')
