@@ -10,11 +10,22 @@ This is a web tool to keep track of your baby's:
 - Milk intake (aka meal)
 - Sleep amount
 - Weight
-- Output (*work in progress*)
 
-Reports are provided.
+**Best viewed on mobile devices**
 
-**This web tool is best viewed on mobile devices**
+## Features
+1. Weight and height input
+2. Meals input (ml)
+3. Sleep time and wake up time input
+4. Day-to-day intake & sleep comparison
+5. Intake trend report
+6. Sleep amount trend report
+7. Sleep amount by hours analysis
+8. Weekly weight tracking
+9. Weight trend report
+10. WHO's standard weight tracking
+
+Fully mobile compatible
 
 ## Requirements
 
