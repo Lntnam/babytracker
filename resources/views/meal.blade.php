@@ -79,7 +79,7 @@
                     maxValue: {{ (new Carbon($dob))->diffInDays(\Carbon\Carbon::today()->addDay()) }}
                 },
                 legend: {position: 'none'},
-                colors: ['#1565C0'],
+                colors: ['#1E88E5'],
                 chartArea: {left: '10%', top: '5%', width: '85%', height: '80%'},
                 trendlines: {
                     0: {

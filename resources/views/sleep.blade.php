@@ -114,6 +114,7 @@
                 pieHole: 0.4,
                 chartArea: {left: 0, top: 0, width: '100%', height: '80%'},
                 legend: {position: 'bottom'},
+                colors: ['#5C6BC0', '#03A9F4', '#E57373', '#FFA726']
             };
 
             var options = {
@@ -127,6 +128,7 @@
                     maxValue: {{ (new Carbon($dob))->diffInDays(\Carbon\Carbon::today()->addDay()) }}
                 },
                 legend: 'none',
+                colors: ['#1E88E5'],
                 chartArea: {left: '15%', top: '5%', width: '80%', height: '80%'},
                 trendlines: {0: {
                     type: 'exponential'
