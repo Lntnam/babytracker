@@ -4,14 +4,12 @@
 
 @section('content')
     <div class="main-info">
-        <h3>Sleep Reports</h3>
+        <h4>Sleep Reports</h4>
     </div>
 
     <!-- ################## -->
     <!-- PAST 10 DAYS -->
-    <div class="main-info">
-        <h4>Past 4 weeks</h4>
-    </div>
+    <h5 class="text-center">Daily Total Sleep</h5>
 
     <div class="row">
         <div id="ten-day-chart" class="col-12" style="height: 300px"></div>
@@ -28,11 +26,7 @@
         @endfor
     </div>
 
-    <!-- ################## -->
-    <!-- Analysis -->
-    <div class="main-info">
-        <h4>10 Days Analysis</h4>
-    </div>
+    <h5 class="text-center">Sleep Amount Analysis</h5>
 
     <!-- Median -->
     <div class="row">
