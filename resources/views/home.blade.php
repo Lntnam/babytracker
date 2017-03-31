@@ -63,10 +63,24 @@
             </div>
             <div class="row"><!-- Meal today vs yesterday -->
                 <div class="col-6" id="today-meals-table">
-                    @include('sub.meals_table', ['meal_list' => $today_meals])
+                    <table class="table table-sm">
+                        <thead>
+                        <tr>
+                            <th colspan="2">Today</th>
+                        </tr>
+                        </thead>
+                        @include('sub.meals_table', ['meal_list' => $today_meals])
+                    </table>
                 </div>
                 <div class="col-6">
-                    @include('sub.meals_table', ['meal_list' => $yesterday_meals])
+                    <table class="table table-sm">
+                        <thead>
+                        <tr>
+                            <th colspan="2">Yesterday</th>
+                        </tr>
+                        </thead>
+                        @include('sub.meals_table', ['meal_list' => $yesterday_meals])
+                    </table>
                 </div>
             </div>
         </div>
@@ -80,10 +94,24 @@
             </div>
             <div class="row"> <!-- Sleep today vs yesterday -->
                 <div class="col-6" id="today-sleep-table">
-                    @include('sub.sleeps_table', ['sleep_list' => $today_sleeps])
+                    <table class="table table-sm">
+                        <thead>
+                        <tr>
+                            <th colspan="2">Today</th>
+                        </tr>
+                        </thead>
+                        @include('sub.sleeps_table', ['sleep_list' => $today_sleeps])
+                    </table>
                 </div>
                 <div class="col-6">
-                    @include('sub.sleeps_table', ['sleep_list' => $yesterday_sleeps])
+                    <table class="table table-sm">
+                        <thead>
+                        <tr>
+                            <th colspan="2">Yesterday</th>
+                        </tr>
+                        </thead>
+                        @include('sub.sleeps_table', ['sleep_list' => $yesterday_sleeps])
+                    </table>
                 </div>
             </div>
         </div>
@@ -166,7 +194,7 @@
                         <div class="input-group clockpicker" data-placement="right" data-align="top"
                              data-autoclose="true">
                             <input id="meal-time-input" type="text" class="form-control"
-                                   value="{{ Carbon::now()->format('H:i') }}">
+                                   value="{{ Carbon::now()->format('H:i') }}" readonly="true">
                             <span class="input-group-addon"><i class="fa fa-clock-o" aria-hidden="true"></i></span>
                         </div>
                     </div>
@@ -218,7 +246,7 @@
                         <div class="input-group clockpicker" data-placement="right" data-align="top"
                              data-autoclose="true">
                             <input id="sleep-time-input" type="text" class="form-control"
-                                   value="{{ Carbon::now()->format('H:i') }}">
+                                   value="{{ Carbon::now()->format('H:i') }}" readonly="true">
                             <span class="input-group-addon"><i class="fa fa-clock-o" aria-hidden="true"></i></span>
                         </div>
                     </div>
