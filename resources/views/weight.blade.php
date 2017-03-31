@@ -30,17 +30,17 @@
     </div>
 
     <!-- ################## -->
-    <!-- Increment -->
+    <!-- Trend -->
     <div class="main-info">
-        <h4>Increment By Week</h4>
+        <h4>Weight Trend</h4>
     </div>
 
     <div class="row">
-        @foreach ($increment_weeks as $week => $increment)
+        @foreach ($records as $record)
             <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl-3">
                 <div class="row report-cell">
-                    <div class="col-6"><strong>W{{ $week }}</strong></div>
-                    <div class="col-6">{{ round($increment * 1000) }}g</div>
+                    <div class="col-6"><strong>{{ (new Carbon($record->day))->format('M-d') }}</strong></div>
+                    <div class="col-6">{{ round($record->weight, 1) }}kg</div>
                 </div>
             </div>
         @endforeach
@@ -48,7 +48,7 @@
 
     <!-- Weekly increment chart -->
     <div class="row">
-        <div id="weekly-increment-chart" class="col-12" style="height: 300px"></div>
+        <div id="weight-trend-chart" class="col-12" style="height: 300px"></div>
     </div>
 
     <!-- ################## -->
@@ -91,26 +91,31 @@
                 @endforeach
             ]);
 
-            var week_increment_data = google.visualization.arrayToDataTable([
-                ['Week', 'Increment'],
-                    @foreach ($increment_weeks as $week => $increment)
-                ['W{{ $week }}', {{ round($increment * 1000) }}],
+            var weight_trend_data = google.visualization.arrayToDataTable([
+                ['Age', 'Weight'],
+                    @foreach ($records as $record)
+                [{{ (new Carbon($dob))->diffInDays(new Carbon($record->day)) }}, {{ $record->weight }}],
                 @endforeach
             ]);
 
             var options = {
                 curveType: 'function',
-                legend: {position: 'none'},
+                legend: 'none',
                 vAxis: {title: 'kg'}
             };
 
+            var trend_options = {
+                vAxis: {title: 'Weight (kg)'},
+                hAxis: {title: 'Age (days)'},
+                legend: 'none',
+                trendlines: {0: {}}
+            };
+
             var weekly_chart = new google.visualization.LineChart(document.getElementById('weekly-chart'));
-            var weekly_increment_chart = new google.visualization.LineChart(document.getElementById('weekly-increment-chart'));
+            var trend_chart = new google.visualization.ScatterChart(document.getElementById('weight-trend-chart'));
 
             weekly_chart.draw(week_weight_data, options);
-
-            options.vAxis = {title: 'g'};
-            weekly_increment_chart.draw(week_increment_data, options);
+            trend_chart.draw(weight_trend_data, trend_options);
         }
     </script>
 @endsection
