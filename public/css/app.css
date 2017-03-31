@@ -15,6 +15,7 @@ body {
 
 .report-cell {
     border: 1px solid #ECEEEF;
+    margin-bottom: 0rem!important;
 }
 
 .nav-tabs {
