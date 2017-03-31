@@ -31,6 +31,7 @@ Route::get('ajax/load_today_meals_view', 'AjaxController@loadTodayMealsView')->n
 Route::get('ajax/load_meal_snapshot_view', 'AjaxController@loadMealSnapshotView')->name('Ajax.LoadMealSnapshotView');
 Route::get('ajax/load_today_sleeps_view', 'AjaxController@loadTodaySleepsView')->name('Ajax.LoadTodaySleepsView');
 Route::get('ajax/load_sleep_snapshot_view', 'AjaxController@loadSleepSnapshotView')->name('Ajax.LoadSleepSnapshotView');
+Route::get('ajax/load_notifications', 'AjaxController@loadNotifications')->name('Ajax.LoadNotifications');
 
 Route::get('/meal', 'MealReportController@index')->name('MealReport');
 

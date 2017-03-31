@@ -17,16 +17,8 @@
     <!-- notifications -->
     @if (!empty($notifications))
         <div class="row">
-            <div class="col-12">
-                @foreach ($notifications as $n)
-                    <div class="alert alert-{{  $n->type }} alert-dismissible fade show" role="alert">
-                        <input type="hidden" value="{{ $n->id }}" name="alert-id">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                        <strong>{{ $n->title }}</strong> {{ $n->message }}
-                    </div>
-                @endforeach
+            <div class="col-12" id="notifications">
+                @include('sub.notifications')
             </div>
         </div>
     @endif
@@ -318,6 +310,7 @@
 
             //-- auto reload
             autoload();
+            autoloadNotifications();
 
             //-- closing alerts
             $('.alert').on('closed.bs.alert', function () {
@@ -430,6 +423,12 @@
                 $('#sleep-snapshot').load('{!! route('Ajax.LoadSleepSnapshotView') !!}', function() {autotask_check(Math.pow(2, 4))});
                 $('#today-sleep-table').load('{!! route('Ajax.LoadTodaySleepsView') !!}', function() {autotask_check(Math.pow(2, 5))});
             }, 30000);
+        }
+
+        function autoloadNotifications() {
+            timeout_id = setTimeout(function () {
+                $('#notifications').load('{!! route('Ajax.LoadNotifications') !!}', function() {autoloadNotifications()});
+            }, 600000);
         }
 
         function autotask_check(value) {

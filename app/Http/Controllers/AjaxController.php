@@ -53,7 +53,7 @@ class AjaxController extends Controller
         }
 
         $sleeping = !$sleeping;
-        return response()->json(['sleeping'=>$sleeping]);
+        return response()->json(['sleeping' => $sleeping]);
     }
 
     public function cancelSleep()
@@ -81,32 +81,43 @@ class AjaxController extends Controller
         ]);
     }
 
-    public function loadTodayMealsView() {
+    public function loadTodayMealsView()
+    {
         return view('sub.meals_table', [
             'meal_list' => MealRepository::getMealsOnDate(DayRecordRepository::getCurrentDate())
         ]);
     }
 
-    public function loadMealSnapshotView() {
+    public function loadMealSnapshotView()
+    {
         return view('sub.meal_snapshot', [
             'last_meal' => MealRepository::getLastMeal(),
             'meal' => MealRepository::getTodayTotalMealAmount()
         ]);
     }
 
-    public function loadTodaySleepsView() {
+    public function loadTodaySleepsView()
+    {
         return view('sub.sleeps_table', [
             'sleep_list' => SleepRepository::getSleepsOnDate(DayRecordRepository::getCurrentDate())
         ]);
     }
 
-    public function loadSleepSnapshotView() {
+    public function loadSleepSnapshotView()
+    {
         $sleep = SleepRepository::getTodayTotalSleepAmount();
         $sleep = CarbonInterval::hours(floor($sleep / 60))->minute($sleep % 60);
 
         return view('sub.sleep_snapshot', [
             'last_sleep' => SleepRepository::getLatestSleep(),
             'sleep' => $sleep
+        ]);
+    }
+
+    public function loadNotifications()
+    {
+        return view('sub.notifications', [
+            'notifications' => NotificationRepository::getAllUnread(),
         ]);
     }
 }
