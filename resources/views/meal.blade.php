@@ -73,6 +73,7 @@
                 vAxis: {title: 'Intake (ml)'},
                 hAxis: {
                     title: 'Age (days)',
+                    format: '#0',
                     maxValue: {{ (new Carbon($dob))->diffInDays(\Carbon\Carbon::today()->addDay(2)) }}
                 },
                 legend: 'none',
