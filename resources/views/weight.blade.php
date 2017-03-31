@@ -51,22 +51,30 @@
         <div id="weight-trend-chart" class="col-12" style="height: 300px"></div>
     </div>
 
-    <!-- ################## -->
-    <!-- Increment -->
-    <div class="main-info">
-        <h4>Increment Analysis</h4>
-    </div>
-
-    <div class="row">
-        @foreach ($increment_analysis as $key => $value)
-            <div class="col-6 col-sm-6 col-md-3 col-lg-3">
-                <div class="row report-cell">
-                    <div class="col-6"><strong>{{ $key }}</strong></div>
-                    <div class="col-6">{{ round($value * 1000) }}g</div>
-                </div>
-            </div>
-        @endforeach
-    </div>
+    @if (!empty($WHO_table))
+        <div class="main-info">
+            <h4>{{ $next_milestone / 30 }} Month WHO Standard</h4>
+        </div>
+        <div class="row">
+            <p class="lead text-center col-12">
+                @for ($i = 0; $i < count($WHO_table); $i ++)
+                    @if ($weight <= $WHO_table[$i] && ($i == 0 || $weight >= $WHO_table[$i-1]))
+                        <i class="fa fa-hand-o-right" aria-hidden="true"></i> <span
+                                class="badge badge-primary">{{ $weight }}</span>
+                    @endif
+                    <span class="badge badge-{{ $i==0 || $i==4 ? 'danger' :
+                        ($i==1 || $i==3 ? 'warning' : 'success') }}">{{ $WHO_table[$i] }}</span>
+                    @if ($i < count($WHO_table) - 1)
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    @endif
+                    @if ($weight > $WHO_table[$i])
+                        <i class="fa fa-hand-o-right" aria-hidden="true"></i> <span
+                                class="badge badge-primary">{{ $weight }}</span>
+                    @endif
+                @endfor
+            </p>
+        </div>
+    @endif
 
     <!-- Back to home -->
     <div class="row">
@@ -92,10 +100,13 @@
             ]);
 
             var weight_trend_data = google.visualization.arrayToDataTable([
-                ['Age', 'Weight'],
+                ['Age', 'Weight', 'L2 Under', 'L1 Under', 'Standard', 'L1 Over', 'L2 Over'],
                     @foreach ($records as $record)
-                [{{ (new Carbon($dob))->diffInDays(new Carbon($record->day)) }}, {{ $record->weight }}],
-                @endforeach
+                [{{ $dob->diffInDays(new Carbon($record->day)) }}, {{ $record->weight }}, null, null, null, null, null],
+                    @endforeach
+                    @if (!empty($WHO_table))
+                [{{ $next_milestone }}, null, {{ $WHO_table[0] }}, {{ $WHO_table[1] }}, {{ $WHO_table[2] }}, {{ $WHO_table[3] }}, {{ $WHO_table[4] }}]
+                @endif
             ]);
 
             var options = {
@@ -106,10 +117,16 @@
             };
 
             var trend_options = {
-                vAxis: {title: 'Weight (kg)'},
-                hAxis: {title: 'Age (days)'},
+                vAxis: {
+                    title: 'Weight (kg)',
+                },
+                hAxis: {
+                    title: 'Age (days)',
+                    format: '#0',
+                },
                 legend: 'none',
-                chartArea: {left: '10%', top: '10%', width: '90%', height: '80%'},
+                chartArea: {left: '10%', top: '10%', width: '85%', height: '80%'},
+                colors: ['#0275D8', '#D9534F', '#F0AD4E', '#5CB85C', '#F0AD4E', '#D9534F'],
                 trendlines: {0: {}}
             };
 

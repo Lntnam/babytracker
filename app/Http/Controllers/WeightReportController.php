@@ -31,23 +31,18 @@ class WeightReportController extends Controller
                 break;
         }
 
-        // increment analysis
-        $three_days = WeightRepository::getMinMaxWeight(Carbon::today()->subDay(2)->toDateString(), Carbon::today()->toDateString());
-        $seven_days = WeightRepository::getMinMaxWeight(Carbon::today()->subDay(6)->toDateString(), Carbon::today()->toDateString());
-        $fourteen_days = WeightRepository::getMinMaxWeight(Carbon::today()->subDay(13)->toDateString(), Carbon::today()->toDateString());
-        $thirty_days = WeightRepository::getMinMaxWeight(Carbon::today()->subDay(29)->toDateString(), Carbon::today()->toDateString());
-        $increment_analysis = [
-            '3D' => ($three_days->max_w - $three_days->min_w) / 3,
-            '7D' => ($seven_days->max_w - $seven_days->min_w) / 7,
-            '14D' => ($fourteen_days->max_w - $fourteen_days->min_w) / 14,
-            '30D' => ($thirty_days->max_w - $thirty_days->min_w) / 30,
-        ];
+        // get WHO standards
+        $age = $dob->diffInDays(Carbon::today());
+        $next_milestone = ceil($age / 30);
+        $WHO_table = config('static.WHO_weight_table');
 
         return view('weight', [
             'weight_weeks' => $weight_weeks,
-            'increment_analysis' => $increment_analysis,
             'records' => WeightRepository::getAllRecords(),
             'dob' => $dob,
+            'weight' => WeightRepository::getCurrentWeight(),
+            'next_milestone' => $next_milestone * 30,
+            'WHO_table' => isset($WHO_table[$next_milestone]) ? $WHO_table[$next_milestone] : null,
         ]);
     }
 }
