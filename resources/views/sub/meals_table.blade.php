@@ -1,4 +1,3 @@
-<tbody id="meals-today-body">
 @foreach ($meal_list as $meal)
     <tr>
         <th scope="row">{{ (new Carbon($meal->at))->format('H:i') }}</th>
@@ -7,4 +6,3 @@
         </td>
     </tr>
 @endforeach
-</tbody>

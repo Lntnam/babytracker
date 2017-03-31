@@ -62,14 +62,16 @@
                 </div>
             </div>
             <div class="row"><!-- Meal today vs yesterday -->
-                <div class="col-6" id="today-meals-table">
+                <div class="col-6">
                     <table class="table table-sm">
                         <thead>
                         <tr>
                             <th colspan="2">Today</th>
                         </tr>
                         </thead>
+                        <tbody id="today-meals-table">
                         @include('sub.meals_table', ['meal_list' => $today_meals])
+                        </tbody>
                     </table>
                 </div>
                 <div class="col-6">
@@ -79,7 +81,9 @@
                             <th colspan="2">Yesterday</th>
                         </tr>
                         </thead>
+                        <tbody>
                         @include('sub.meals_table', ['meal_list' => $yesterday_meals])
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -93,14 +97,16 @@
                 @include('sub.sleep_status')
             </div>
             <div class="row"> <!-- Sleep today vs yesterday -->
-                <div class="col-6" id="today-sleep-table">
+                <div class="col-6">
                     <table class="table table-sm">
                         <thead>
                         <tr>
                             <th colspan="2">Today</th>
                         </tr>
                         </thead>
+                        <tbody id="today-sleep-table">
                         @include('sub.sleeps_table', ['sleep_list' => $today_sleeps])
+                        </tbody>
                     </table>
                 </div>
                 <div class="col-6">
@@ -110,7 +116,9 @@
                             <th colspan="2">Yesterday</th>
                         </tr>
                         </thead>
+                        <tbody>
                         @include('sub.sleeps_table', ['sleep_list' => $yesterday_sleeps])
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -296,55 +304,63 @@
 @section('scripts')
     <script type="text/javascript" src="{{ asset('js/bootstrap-clockpicker.min.js') }}"></script>
     <script type="text/javascript">
-        var clockpicker_options = {
-            default: 'now',
-            autoclose: true
-        };
-        $('#meal-time-input').clockpicker(clockpicker_options);
-        $('#sleep-time-input').clockpicker(clockpicker_options);
-        $('#wake-time-input').clockpicker(clockpicker_options);
+        $(document).ready(function () {
+            var clockpicker_options = {
+                default: 'now',
+                autoclose: true
+            };
+            $('#meal-time-input').clockpicker(clockpicker_options);
+            $('#sleep-time-input').clockpicker(clockpicker_options);
+            $('#wake-time-input').clockpicker(clockpicker_options);
 
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
-        //-- closing alerts
-        $('.alert').on('closed.bs.alert', function () {
-            $.post("{{ route('Ajax.CloseNotification') }}", {id: $(this).find('input').val()});
-        });
-
-        //-- saving weight & height
-        $('#changeWeightModal').find('button.btn-primary').on('click', function () {
-            $(this).append('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>')
-            $(this).off('click');
-            $.post("{{ route('Ajax.SaveMeasurements') }}", {
-                weight: $('#weight-input').val(),
-                height: $('#height-input').val()
-            }, function () {
+            //-- auto reload
+            setInterval(function () {
                 $('#age-weight-height').load('{!! route('Ajax.LoadAgeWeightHeightView') !!}');
-
-                $('#changeWeightModal').find('button.btn-primary').empty().text('Save');
-                $('#changeWeightModal').modal('hide');
-            });
-        });
-
-        //-- adding meal
-        $('#addMealModal').find('button.btn-primary').on('click', function () {
-            $(this).append('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>')
-            $(this).off('click');
-            $.post("{{ route('Ajax.AddMeal') }}", {
-                value: $('#meal-input').val(),
-                type: $('#bottle-fed').prop("checked") ? $('#bottle-fed').attr('value') : $('#breast-fed').attr('value'),
-                at: $('#meal-time-input').val()
-            }, function () {
                 $('#meal-snapshot').load('{!! route('Ajax.LoadMealSnapshotView') !!}');
                 $('#today-meals-table').load('{!! route('Ajax.LoadTodayMealsView') !!}');
+                $('#sleep-status').load('{!! route('Ajax.LoadSleepStatusView') !!}');
+                $('#sleep-snapshot').load('{!! route('Ajax.LoadSleepSnapshotView') !!}');
+                $('#today-sleep-table').load('{!! route('Ajax.LoadTodaySleepsView') !!}');
+            }, 3000);
 
-                $('#addMealModal').find('button.btn-primary').empty().text('Save');
-                $('#addMealModal').modal('hide');
+            //-- closing alerts
+            $('.alert').on('closed.bs.alert', function () {
+                $.post("{{ route('Ajax.CloseNotification') }}", {id: $(this).find('input').val()});
             });
+
+            //-- saving weight & height
+            $('#changeWeightModal').find('button.btn-primary').on('click', function () {
+                $(this).append('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>')
+                $(this).off('click');
+                $.post("{{ route('Ajax.SaveMeasurements') }}", {
+                    weight: $('#weight-input').val(),
+                    height: $('#height-input').val()
+                }, function () {
+                    $('#age-weight-height').load('{!! route('Ajax.LoadAgeWeightHeightView') !!}');
+
+                    $('#changeWeightModal').find('button.btn-primary').empty().text('Save');
+                    $('#changeWeightModal').modal('hide');
+                });
+            });
+
+            //-- adding meal
+            $('#addMealModal').find('button.btn-primary').on('click', function () {
+                $(this).append('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>')
+                $(this).off('click');
+                $.post("{{ route('Ajax.AddMeal') }}", {
+                    value: $('#meal-input').val(),
+                    type: $('#bottle-fed').prop("checked") ? $('#bottle-fed').attr('value') : $('#breast-fed').attr('value'),
+                    at: $('#meal-time-input').val()
+                }, function () {
+                    $('#meal-snapshot').load('{!! route('Ajax.LoadMealSnapshotView') !!}');
+                    $('#today-meals-table').load('{!! route('Ajax.LoadTodayMealsView') !!}');
+
+                    $('#addMealModal').find('button.btn-primary').empty().text('Save');
+                    $('#addMealModal').modal('hide');
+                });
+            });
+            $('#addSleepModal').find('button.btn-primary').on('click', sleepClick);
+            $('#wakeUpModal').find('button.btn-primary').on('click', sleepClick);
         });
 
         //-- sleep
@@ -371,8 +387,6 @@
                 }
             });
         };
-        $('#addSleepModal').find('button.btn-primary').on('click', sleepClick);
-        $('#wakeUpModal').find('button.btn-primary').on('click', sleepClick);
 
         function cancelSleepClick() {
             $('#cancel-sleep-button').append('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>')
