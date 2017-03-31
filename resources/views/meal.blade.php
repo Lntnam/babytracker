@@ -4,18 +4,13 @@
 
 @section('content')
     <div class="main-info">
-        <h3>Meal Reports</h3>
+        <h4>Meal Reports</h4>
     </div>
 
-    <!-- ################## -->
-    <!-- PAST 10 DAYS -->
-    <div class="main-info">
-        <h4>Past 4 weeks</h4>
-    </div>
+    <h5 class="text-center">Daily Total Intake</h5>
 
-    <!-- 28 Days chart -->
     <div class="row">
-        <div id="ten-day-chart" class="col-12" style="height: 300px"></div>
+        <div id="daily-intake-chart" class="col-12" style="height: 300px"></div>
     </div>
 
     <div class="row">
@@ -29,10 +24,10 @@
         @endfor
     </div>
 
-    <!-- ################## -->
-    <!-- Time Average -->
-    <div class="main-info">
-        <h4>Meal Amount Analysis</h4>
+    <h5 class="text-center">Time to Time Comparison</h5>
+
+    <div class="row">
+        <div id="time-comparison-chart" class="col-12" style="height: 300px"></div>
     </div>
 
     <div class="row">
@@ -58,33 +53,50 @@
 @section('scripts')
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
-        google.charts.load('current', {'packages': ['corechart']});
+        google.charts.load('current', {'packages': ['corechart', 'bar']});
         google.charts.setOnLoadCallback(drawCharts);
 
         function drawCharts() {
-            var ten_day_data = google.visualization.arrayToDataTable([
+            var daily_intake_data = google.visualization.arrayToDataTable([
                 ['Age', 'Amount'],
                     @foreach ($past_records as $record)
                 [{{ $dob->diffInDays(new Carbon($record->day))  }}, {{ $record->meal }}],
                 @endforeach
             ]);
 
-            var options = {
+            var time_comparison_data = google.visualization.arrayToDataTable([
+                ['Time of Day', 'Amount'],
+                    @foreach ($meals_by_time as $time_block => $meals)
+                ['{{ $time_block }}', {{ \App\Utilities::findArrayMedian(array_values($meals))  }}],
+                @endforeach
+            ]);
+
+            var scatter_options = {
                 vAxis: {title: 'Intake (ml)'},
                 hAxis: {
                     title: 'Age (days)',
                     format: '#0',
                     maxValue: {{ (new Carbon($dob))->diffInDays(\Carbon\Carbon::today()->addDay(2)) }}
                 },
-                legend: 'none',
-                chartArea: {left: '10%', top: '10%', width: '85%', height: '80%'},
-                trendlines: {0: {
-                    type: 'exponential'
-                }}
+                legend: {position: 'none'},
+                chartArea: {left: '10%', top: '5%', width: '85%', height: '80%'},
+                trendlines: {
+                    0: {
+                        type: 'exponential'
+                    }
+                }
+            };
+            var column_options = {
+                vAxis: {title: 'Intake Median (ml)'},
+                hAxis: {title: 'Time of day'},
+                legend: {position: 'none'},
+                chartArea: {left: '10%', top: '5%', width: '85%', height: '80%'},
             };
 
-            var ten_day_chart = new google.visualization.ScatterChart(document.getElementById('ten-day-chart'));
-            ten_day_chart.draw(ten_day_data, options);
+            var daily_intake_chart = new google.visualization.ScatterChart(document.getElementById('daily-intake-chart'));
+            var time_comparison_chart = new google.charts.Bar(document.getElementById('time-comparison-chart'));
+            daily_intake_chart.draw(daily_intake_data, scatter_options);
+            time_comparison_chart.draw(time_comparison_data, google.charts.Bar.convertOptions(column_options));
         }
     </script>
 @endsection
