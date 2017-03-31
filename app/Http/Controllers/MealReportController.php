@@ -10,20 +10,25 @@ class MealReportController extends Controller
 {
     public function index() {
 
-        // Past 10 days
-        $records = DayRecordRepository::getPastRecords(10);
+        // Past 28 days
+        $records = DayRecordRepository::getPastRecords(28);
 
-        // 10 days time average
-        $meals = MealRepository::getPastRecords(10);
+        // 28 days time average
+        $meals = MealRepository::getPastRecords(28);
         $meals_by_time = [];
 
         foreach ($meals as $meal) {
             $block = $this->getTimeBlock($meal->at);
             if (isset($meals_by_time[$block])) {
-                $meals_by_time[$block][] = $meal->value;
+                if (isset($meals_by_time[$block][$meal->on])){
+                    $meals_by_time[$block][$meal->on] += $meal->value;
+                }
+                else {
+                    $meals_by_time[$block][$meal->on] = $meal->value;
+                }
             }
             else {
-                $meals_by_time[$block] = [$meal->value];
+                $meals_by_time[$block] = [$meal->on => $meal->value];
             }
         }
         ksort($meals_by_time);

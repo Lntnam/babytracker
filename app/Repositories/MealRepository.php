@@ -61,14 +61,20 @@ class MealRepository
             ->get();
     }
 
-    public static function getPastRecords($no_of_days)
+    public static function getPastRecords($no_of_days = 0)
     {
-        $today = new Carbon(DayRecordRepository::getCurrentDate());
-        $date = $today->copy()->subDay($no_of_days - 1);
-
-        return Meal::whereBetween('on', [$date->toDateString(), $today->toDateString()])
-            ->orderBy('on', 'asc')
-            ->orderBy('at', 'asc')
-            ->get();
+        if ($no_of_days > 0) {
+            $today = new Carbon(DayRecordRepository::getCurrentDate());
+            $date = $today->copy()->subDay($no_of_days - 1);
+            return Meal::whereBetween('on', [$date->toDateString(), $today->toDateString()])
+                ->orderBy('on', 'asc')
+                ->orderBy('at', 'asc')
+                ->get();
+        }
+        else {
+            return Meal::orderBy('on', 'asc')
+                ->orderBy('at', 'asc')
+                ->get();
+        }
     }
 }
