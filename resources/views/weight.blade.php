@@ -101,6 +101,7 @@
             var options = {
                 curveType: 'function',
                 legend: 'none',
+                chartArea: {left: '10%', top: '10%', width: '90%', height: '80%'},
                 vAxis: {title: 'kg'}
             };
 
@@ -108,6 +109,7 @@
                 vAxis: {title: 'Weight (kg)'},
                 hAxis: {title: 'Age (days)'},
                 legend: 'none',
+                chartArea: {left: '10%', top: '10%', width: '90%', height: '80%'},
                 trendlines: {0: {}}
             };
 
