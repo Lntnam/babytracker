@@ -65,7 +65,7 @@
             var ten_day_data = google.visualization.arrayToDataTable([
                 ['Age', 'Amount'],
                     @foreach ($past_records as $record)
-                [{{ (new Carbon($dob))->diffInDays(new Carbon($record->day))  }}, {{ $record->meal }}],
+                [{{ $dob->diffInDays(new Carbon($record->day))  }}, {{ $record->meal }}],
                 @endforeach
             ]);
 
