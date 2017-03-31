@@ -56,7 +56,9 @@ class DayRecordRepository
 
     public static function getPastRecords($no_of_days)
     {
-        return DayRecord::orderBy('day', 'desc')->take($no_of_days)->get();
+        return DayRecord::orderBy('day', 'asc')
+            ->take($no_of_days)
+            ->get();
     }
 
     public static function closeToday() {
