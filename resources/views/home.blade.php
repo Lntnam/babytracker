@@ -329,7 +329,7 @@
             //-- saving weight & height
             $('#changeWeightModal').find('button.btn-primary').on('click', function () {
                 $(this).append('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>')
-                $(this).off('click');
+                $(this).prop('disabled', true);
                 clearTimeout(timeout_id);
                 $.post("{{ route('Ajax.SaveMeasurements') }}", {
                     weight: $('#weight-input').val(),
@@ -339,6 +339,7 @@
 
                     $('#age-weight-height').load('{!! route('Ajax.LoadAgeWeightHeightView') !!}', function() {
                         $('#changeWeightModal').find('button.btn-primary').empty().text('Save');
+                        $('#changeWeightModal').find('button.btn-primary').prop('disabled', false);
                         $('#changeWeightModal').modal('hide');
                         autoload();
                     });
@@ -348,7 +349,7 @@
             //-- adding meal
             $('#addMealModal').find('button.btn-primary').on('click', function () {
                 $(this).append('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>')
-                $(this).off('click');
+                $(this).prop('disabled', true);
                 clearTimeout(timeout_id);
                 $.post("{{ route('Ajax.AddMeal') }}", {
                     value: $('#meal-input').val(),
@@ -361,11 +362,13 @@
                         $('#today-meals-table').load('{!! route('Ajax.LoadTodayMealsView') !!}', function() {
                             $('#addMealModal').find('button.btn-primary').empty().text('Save');
                             $('#addMealModal').modal('hide');
+                            $('#addMealModal').find('button.btn-primary').prop('disabled', false);
                             autoload();
                         });
                     });
                 });
             });
+
             $('#addSleepModal').find('button.btn-primary').on('click', sleepClick);
             $('#wakeUpModal').find('button.btn-primary').on('click', sleepClick);
         });
@@ -373,7 +376,7 @@
         //-- sleep
         function sleepClick() {
             $(this).append('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>')
-            $(this).off('click');
+            $(this).prop('disabled', true);
             clearTimeout(timeout_id);
             $.post("{{ route('Ajax.ToggleSleep') }}", {
                 sleep_time: $('#sleep-time-input').val(),
@@ -386,6 +389,7 @@
                     if (data.sleeping) { // from wake to sleep
                         $('#addSleepModal').find('button.btn-primary').empty().text('Save');
                         $('#addSleepModal').modal('hide');
+                        $('#addSleepModal').find('button.btn-primary').prop('disabled', false);
                         autoload();
                     }
                     else { // from sleep to wake
@@ -393,6 +397,7 @@
                             $('#today-sleep-table').load('{!! route('Ajax.LoadTodaySleepsView') !!}', function() {
                                 $('#wakeUpModal').find('button.btn-primary').empty().text('Save');
                                 $('#wakeUpModal').modal('hide');
+                                $('#wakeUpModal').find('button.btn-primary').prop('disabled', false);
                                 autoload();
                             });
                         });
@@ -404,12 +409,13 @@
 
         function cancelSleepClick() {
             $('#cancel-sleep-button').append('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>')
-            $('#cancel-sleep-button').off('click');
+            $('#cancel-sleep-button').prop('disabled', true);
             clearTimeout(timeout_id);
             $.post("{{ route('Ajax.CancelSleep') }}", {}, function () {
                 console.log('CancelSleep returned.');
 
                 $('#sleep-status').load('{!! route('Ajax.LoadSleepStatusView') !!}', function() {
+                    $('#cancel-sleep-button').prop('disabled', false);
                     autoload();
                 });
             });
