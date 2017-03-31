@@ -125,7 +125,10 @@
 
             var options = {
                 vAxis: {title: 'Sleep Time (minutes)'},
-                hAxis: {title: 'Age (days)'},
+                hAxis: {
+                    title: 'Age (days)',
+                    maxValue: {{ (new Carbon($dob))->diffInDays(\Carbon\Carbon::today()->addDay(2)) }}
+                },
                 legend: 'none',
                 chartArea: {left: '15%', top: '10%', width: '85%', height: '80%'},
                 trendlines: {0: {

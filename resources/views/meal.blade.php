@@ -71,7 +71,10 @@
 
             var options = {
                 vAxis: {title: 'Intake (ml)'},
-                hAxis: {title: 'Age (days)'},
+                hAxis: {
+                    title: 'Age (days)',
+                    maxValue: {{ (new Carbon($dob))->diffInDays(\Carbon\Carbon::today()->addDay(2)) }}
+                },
                 legend: 'none',
                 chartArea: {left: '10%', top: '10%', width: '90%', height: '80%'},
                 trendlines: {0: {
