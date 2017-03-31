@@ -10,10 +10,6 @@ class MealReportController extends Controller
 {
     public function index() {
 
-        // Today vs Yesterday
-        $today_meals = MealRepository::getMealsOnDate(Carbon::today()->toDateString());
-        $yesterday_meals =MealRepository::getMealsOnDate(Carbon::today()->subDay()->toDateString());
-
         // Past 10 days
         $records = DayRecordRepository::getPastRecords(10);
 
@@ -33,10 +29,9 @@ class MealReportController extends Controller
         ksort($meals_by_time);
 
         return view('meal', [
-            'today_meals' => $today_meals,
-            'yesterday_meals' => $yesterday_meals,
             'past_records' => $records,
             'meals_by_time' => $meals_by_time,
+            'dob' => new Carbon(config('settings.baby_dob')),
         ]);
     }
 
