@@ -27,7 +27,7 @@ class WeightReportController extends Controller
             $start = $end->copy()->addDay();
             $end = $start->copy()->addDay(6);
             $week++;
-            if ($start->gte(Carbon::today()))
+            if ($start->gt(Carbon::today()))
                 break;
         }
 
