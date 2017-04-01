@@ -56,7 +56,8 @@ class DayRecordRepository
 
     public static function getPastRecords($no_of_days)
     {
-        return DayRecord::orderBy('day', 'asc')
+        return DayRecord::whereNotNull('meal')
+            ->orderBy('day', 'asc')
             ->take($no_of_days)
             ->get();
     }
@@ -81,23 +82,6 @@ class DayRecordRepository
         $min_meal = VariableRepository::getExpectationByKey('meal_per_day');
         if ($meal_total < $min_meal) {
             NotificationRepository::createNotification('warning', 'Beware!', 'Less than '.$min_meal.'ml on '.$day_record->day.'.');
-        }
-
-        // check weight
-        $min_weight_inc = VariableRepository::getExpectationByKey('gram_per_day');
-        $day_count = ceil(100 / $min_weight_inc);
-        $records = self::getPastRecords($day_count);
-        $min_weight = 0;
-        $max_weight = 0;
-        foreach ($records as $r) {
-            $min_weight = min($min_weight, $r->weight);
-            $max_weight = max($max_weight, $r->weight);
-        }
-        if ($min_weight > $max_weight) {
-            NotificationRepository::createNotification('danger', 'Alert!', 'Weight drop during the last '.$day_count.' days.');
-        }
-        else if ($min_weight == $max_weight) {
-            NotificationRepository::createNotification('warning', 'Alert!', 'Weight not increasing during the last '.$day_count.' days.');
         }
     }
 }
