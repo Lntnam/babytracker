@@ -14,14 +14,30 @@
     </div>
 
     <div class="row">
-        @for ($i = 0; $i < min(10, count($past_records)); $i++)
-            <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+        @php
+            $count = count($past_records);
+            $half = ceil($count / 2);
+            $i = 0;
+            $col = 1;
+        @endphp
+        @while ($i < $count && ($col == 2 || $i < $half))
+            <div class="col-6">
                 <div class="row report-cell">
                     <div class="col-6"><strong>{{ (new Carbon($past_records[$i]->day))->format('M-d') }}</strong></div>
                     <div class="col-6">{{ $past_records[$i]->meal }}ml</div>
                 </div>
             </div>
-        @endfor
+            @php
+                if ($col === 1) {
+                    $i += $half;
+                    $col = 2;
+                }
+                else {
+                    $i -= $half - 1;
+                    $col = 1;
+                }
+            @endphp
+        @endwhile
     </div>
 
     <h5 class="text-center">Time to Time Comparison</h5>
