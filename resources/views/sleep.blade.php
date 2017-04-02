@@ -24,7 +24,7 @@
         @endfor
     </div>
 
-    <h5 class="text-center">Sleep Amount Analysis</h5>
+    <h5 class="text-center">4 Weeks Median Sleep Distribution</h5>
 
     <!-- Median -->
     <div class="row">
@@ -60,13 +60,13 @@
 
     <!-- Percentage chart -->
     <div class="main-info">
-        <h5>Sleep Time</h5>
+        <h5>4 Weeks Total Sleep Distribution</h5>
     </div>
     <div class="row">
         <div id="sleep-time-chart" class="col-12" style="height: 350px"></div>
     </div>
     <div class="main-info">
-        <h5>Awake Time</h5>
+        <h5>4 Weeks Total Awake Distribution</h5>
     </div>
     <div class="row">
         <div id="awake-time-chart" class="col-12" style="height: 350px"></div>
