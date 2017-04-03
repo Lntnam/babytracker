@@ -67,6 +67,11 @@ class DayRecordRepository
 
         $sleeping = SleepRepository::wakeSleep(Carbon::today()->endOfDay()->toTimeString()); // 23:59
 
+        // calculate sleep, meal
+        $sleep_total = SleepRepository::getTodayTotalSleepAmount();
+        $meal_total = MealRepository::getTodayTotalMealAmount();
+        self::createUpdateDayRecord($sleep_total, $meal_total);
+
         self::setCurrentDate($today->addDay()->toDateString());
 
         if ($sleeping)
