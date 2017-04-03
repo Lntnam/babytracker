@@ -12,9 +12,9 @@ use App\Models\Variable;
 
 class VariableRepository
 {
-    public static function getExpectationByKey($key)
+    public static function getPreferenceByKey($key)
     {
-        $var = Variable::where([['name', 'expectations']])
+        $var = Variable::where([['name', 'preferences']])
             ->first();
         if (!empty($var)) {
             $var_array = json_decode($var->value);
@@ -23,6 +23,20 @@ class VariableRepository
                 return $var_array->$key;
         }
         return null;
+    }
+
+    public static function savePreferences($data) {
+        $var = Variable::where([['name', 'preferences']])
+            ->first();
+        if (!empty($var)) {
+            $var_array = json_decode($var->value);
+
+            foreach ($data as $key => $value) {
+                $var_array[$key] = $value;
+            }
+            $var->value = json_encode($var_array);
+            $var->save();
+        }
     }
 
     public static function getCurrentValueByKey($key)
@@ -36,18 +50,6 @@ class VariableRepository
                 return $var_array->$key;
         }
         return null;
-    }
-
-    public static function setExpectation($key, $value)
-    {
-        $var = Variable::where([['name', 'expectations']])
-            ->first();
-        if (!empty($var)) {
-            $var_array = json_decode($var->value);
-            $var_array->$key = $value;
-            $var->value = json_encode($var_array);
-            $var->save();
-        }
     }
 
     public static function setCurrentValue($key, $value)
