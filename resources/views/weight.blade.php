@@ -58,7 +58,7 @@
         <div class="row">
             <p class="lead text-center col-12">
                 @for ($i = 0; $i < count($WHO_table); $i ++)
-                    @if ($weight <= $WHO_table[$i] && ($i == 0 || $weight >= $WHO_table[$i-1]))
+                    @if ($weight <= $WHO_table[$i] && ($i == 0 || $weight > $WHO_table[$i-1]))
                         <i class="fa fa-hand-o-right" aria-hidden="true"></i> <span
                                 class="badge badge-primary">{{ $weight }}</span>
                     @endif
