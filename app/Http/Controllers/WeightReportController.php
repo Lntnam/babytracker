@@ -2,47 +2,58 @@
 
 namespace App\Http\Controllers;
 
+use App\Repositories\VariableRepository;
 use App\Repositories\WeightRepository;
+use App\Utilities;
 use Carbon\Carbon;
 
 class WeightReportController extends Controller
 {
     public function index()
     {
-
         $dob = new Carbon(config('settings.baby_dob'));
-
-        // weekly weight average
-        $start = $dob->copy();
-        $end = $dob->copy()->addDay(6);
-        $week = 1;
-        $weight_weeks = [];
-
-        while (true) {
-            $avg_weight = WeightRepository::getAverageWeight($start->toDateString(), $end->toDateString());
-
-            if (!empty($avg_weight)) {
-                $weight_weeks[$week] = round($avg_weight, 1);
-            }
-            $start = $end->copy()->addDay();
-            $end = $start->copy()->addDay(6);
-            $week++;
-            if ($start->gt(Carbon::today()))
-                break;
-        }
-
-        // get WHO standards
         $age = $dob->diffInDays(Carbon::today());
-        $next_milestone = ceil($age / 30);
-        $WHO_table = config('static.WHO_weight_table');
+        $weight_records = WeightRepository::getAllRecords();
+        // convert weight records into key=>value array
+        $weight_array = [];
+        foreach ($weight_records as $record) {
+            $weight_array[$dob->diffInDays(new Carbon($record->day))] = $record->weight;
+        }
+        $weight_frequency = VariableRepository::getPreferenceByKey('weight_frequency');
+        $current_weight = WeightRepository::getCurrentWeight();
 
-        return view('weight', [
-            'weight_weeks' => $weight_weeks,
-            'records' => WeightRepository::getAllRecords(),
-            'dob' => $dob,
-            'weight' => WeightRepository::getCurrentWeight(),
-            'next_milestone' => $next_milestone * 30,
-            'WHO_table' => isset($WHO_table[$next_milestone]) ? $WHO_table[$next_milestone] : null,
-        ]);
+        $min_age = $dob->diffInDays(new Carbon($weight_records[0]->day));
+        $max_age = $dob->diffInDays(new Carbon($weight_records[count($weight_records)-1]->day));
+        $zscore_table = Utilities::getZScoreRange(
+            $min_age,
+            $max_age + ($weight_frequency * 2)
+        );
+        $current_zscores = $zscore_table[$max_age];
+
+        $past_milestone = floor($age / 30) * 30;
+        $next_milestone = ceil($age / 30) * 30;
+
+        $next_zscore_milestone = Utilities::getZscore($next_milestone);
+        if ($past_milestone == $next_milestone || $past_milestone == 0)
+            $previous_zscore_milestone = null;
+        else
+            $previous_zscore_milestone = Utilities::getZscore($past_milestone);
+
+        return view('weight', compact(
+            'dob',
+            'age',
+            'weight_records',
+            'weight_array',
+            'min_age',
+            'max_age',
+            'past_milestone',
+            'next_milestone',
+            'weight_frequency',
+            'zscore_table',
+            'current_zscores',
+            'current_weight',
+            'previous_zscore_milestone',
+            'next_zscore_milestone'
+        ));
     }
 }
