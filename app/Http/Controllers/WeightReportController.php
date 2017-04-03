@@ -25,8 +25,8 @@ class WeightReportController extends Controller
         $min_age = $dob->diffInDays(new Carbon($weight_records[0]->day));
         $max_age = $dob->diffInDays(new Carbon($weight_records[count($weight_records)-1]->day));
         $zscore_table = Utilities::getZScoreRange(
-            $min_age,
-            $max_age + ($weight_frequency * 2)
+            $min_age - $weight_frequency,
+            $max_age + $weight_frequency
         );
         $current_zscores = $zscore_table[$max_age];
 

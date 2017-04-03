@@ -130,6 +130,11 @@
                 hAxis: {
                     title: 'Age (days)',
                     format: '#0',
+                    viewWindowMode: 'explicit',
+                    viewWindow: {
+                        max: {{ $max_age + $weight_frequency }},
+                        min: {{ $min_age - $weight_frequency }},
+                    },
                 },
                 legend: 'none',
                 chartArea: {left: '10%', top: '5%', width: '85%', height: '80%'},
