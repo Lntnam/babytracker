@@ -67,21 +67,9 @@ class DayRecordRepository
 
         $sleeping = SleepRepository::wakeSleep(Carbon::today()->endOfDay()->toTimeString()); // 23:59
 
-        // calculate sleep, meal
-        $sleep_total = SleepRepository::getTodayTotalSleepAmount();
-        $meal_total = MealRepository::getTodayTotalMealAmount();
-        $day_record = self::createUpdateDayRecord($sleep_total, $meal_total);
-
         self::setCurrentDate($today->addDay()->toDateString());
 
         if ($sleeping)
             SleepRepository::addSleep(Carbon::today()->toTimeString()); // 00:00
-
-        // notifications
-        // check meal
-        $min_meal = VariableRepository::getExpectationByKey('meal_per_day');
-        if ($meal_total < $min_meal) {
-            NotificationRepository::createNotification('warning', 'Beware!', 'Less than '.$min_meal.'ml on '.$day_record->day.'.');
-        }
     }
 }
