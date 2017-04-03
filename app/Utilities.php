@@ -11,7 +11,7 @@ namespace App;
 
 class Utilities
 {
-    static $zscore_table;
+    private static $zscore_table;
     const ZSCORE_DELIMITER = "\t";
 
     public static function findArrayMedian($array) {
