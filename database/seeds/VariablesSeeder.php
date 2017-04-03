@@ -12,10 +12,9 @@ class VariablesSeeder extends Seeder
     public function run()
     {
         DB::table('variables')->insert([
-            'name' => 'expectations',
+            'name' => 'preferences',
             'value' => json_encode([
-                'gram_per_day' => 40,
-                'meal_per_day' => 480,
+                'weight_frequency' => 2,
             ]),
         ]);
 
