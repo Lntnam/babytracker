@@ -40,7 +40,7 @@
         @endwhile
     </div>
 
-    <h5 class="text-center">4 Weeks Median Sleep Distribution</h5>
+    <h5 class="text-center pt-3 pb-3">4 Weeks Median Sleep Distribution</h5>
 
     <!-- Median -->
     <div class="row">

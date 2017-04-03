@@ -40,7 +40,7 @@
         @endwhile
     </div>
 
-    <h5 class="text-center">Time to Time Comparison</h5>
+    <h5 class="text-center pt-3 pb-3">Time to Time Comparison</h5>
 
     <div class="row">
         <div id="time-comparison-chart" class="col-12" style="height: 300px"></div>
@@ -51,7 +51,7 @@
             <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl-3">
                 <div class="row report-cell">
                     <div class="col-7"><strong>{{ $k }} hrs</strong></div>
-                    <div class="col-5">{{ \App\Utilities::findArrayMedian(array_values($v))  }}ml</div>
+                    <div class="col-5">{{ round(\App\Utilities::findArrayMedian(array_values($v)))  }}ml</div>
                 </div>
             </div>
         @endforeach
@@ -83,7 +83,7 @@
             var time_comparison_data = google.visualization.arrayToDataTable([
                 ['Time of Day', 'Amount'],
                     @foreach ($meals_by_time as $time_block => $meals)
-                ['{{ $time_block }}', {{ \App\Utilities::findArrayMedian(array_values($meals))  }}],
+                ['{{ $time_block }}', {{ round(\App\Utilities::findArrayMedian(array_values($meals))) }}],
                 @endforeach
             ]);
 
@@ -96,7 +96,7 @@
                 },
                 legend: {position: 'none'},
                 colors: ['#1E88E5'],
-                chartArea: {left: '10%', top: '5%', width: '85%', height: '80%'},
+                chartArea: {left: '15%', top: '5%', width: '83%', height: '80%'},
                 trendlines: {
                     0: {
                         type: 'exponential'
@@ -104,11 +104,11 @@
                 }
             };
             var column_options = {
-                vAxis: {title: 'Intake Median (ml)'},
+                vAxis: {title: 'Intake Median (ml)', format: '#0'},
                 hAxis: {title: 'Time of day'},
                 legend: {position: 'none'},
                 colors: ['#1E88E5'],
-                chartArea: {left: '10%', top: '5%', width: '85%', height: '80%'},
+                chartArea: {left: '15%', top: '5%', width: '83%', height: '80%'},
             };
 
             var daily_intake_chart = new google.visualization.ScatterChart(document.getElementById('daily-intake-chart'));
