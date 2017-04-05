@@ -138,10 +138,21 @@
                 },
                 legend: 'none',
                 chartArea: {left: '10%', top: '5%', width: '85%', height: '80%'},
-                colors: ['#D9534F', '#D9534F', '#F0AD4E', '#F0AD4E', '#5CB85C', '#F0AD4E', '#F0AD4E', '#D9534F', '#D9534F', '#0275D8'],
                 curveType: 'function',
+                series : {
+                    0: {color: '#D9534F'},
+                    1: {color: '#D9534F', lineDashStyle: [1, 7], opacity: 0.5},
+                    2: {color: '#F0AD4E', },
+                    3: {color: '#F0AD4E', lineDashStyle: [1, 7], opacity: 0.5},
+                    4: {color: '#5CB85C'},
+                    5: {color: '#F0AD4E', lineDashStyle: [1, 7], opacity: 0.5},
+                    6: {color: '#F0AD4E', },
+                    7: {color: '#D9534F', lineDashStyle: [1, 7], opacity: 0.5},
+                    8: {color: '#D9534F'},
+                    9: {color: '#0275D8', pointSize: 5}
+                },
                 trendlines: {
-                    9: {type: 'exponential', lineWidth: 5, opacity: 0.5}
+                    9: {color: '#0275D8', type: 'exponential', lineWidth: 7, opacity: 0.5}
                 }
             };
 
@@ -163,9 +174,19 @@
                 },
                 legend: 'none',
                 chartArea: {left: '15%', top: '10%', width: '80%', height: '80%'},
-                colors: ['#0275D8', '#D9534F', '#D9534F', '#F0AD4E', '#F0AD4E', '#5CB85C', '#F0AD4E', '#F0AD4E', '#D9534F', '#D9534F'],
+                series : {
+                    1: {color: '#D9534F'},
+                    2: {color: '#D9534F', pointSize: 3, opacity: 0.5},
+                    3: {color: '#F0AD4E'},
+                    4: {color: '#F0AD4E', pointSize: 3, opacity: 0.5},
+                    5: {color: '#5CB85C'},
+                    6: {color: '#F0AD4E', pointSize: 3, opacity: 0.5},
+                    7: {color: '#F0AD4E'},
+                    8: {color: '#D9534F', pointSize: 3, opacity: 0.5},
+                    9: {color: '#D9534F'},
+                },
                 trendlines: {
-                    0: {type: 'exponential', lineWidth: 5, opacity: 0.5}
+                    0: {color: '#0275D8', type: 'exponential', lineWidth: 5, opacity: 0.5}
                 }
             };
 
