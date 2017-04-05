@@ -70,7 +70,7 @@
                     <table class="table table-sm">
                         <thead>
                         <tr>
-                            <th colspan="2">Yesterday</th>
+                            <th colspan="2">Yesterday <small>{{ $yesterday_total_meal }}ml</small></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -105,7 +105,7 @@
                     <table class="table table-sm">
                         <thead>
                         <tr>
-                            <th colspan="2">Yesterday</th>
+                            <th colspan="2">Yesterday <small>{{ $yesterday_total_sleep->hours }}h {{ $yesterday_total_sleep->minutes }}m</small></th>
                         </tr>
                         </thead>
                         <tbody>
