@@ -422,7 +422,7 @@
                 $('#sleep-status').load('{!! route('Ajax.LoadSleepStatusView') !!}', function() {autotask_check(Math.pow(2, 3))});
                 $('#sleep-snapshot').load('{!! route('Ajax.LoadSleepSnapshotView') !!}', function() {autotask_check(Math.pow(2, 4))});
                 $('#today-sleep-table').load('{!! route('Ajax.LoadTodaySleepsView') !!}', function() {autotask_check(Math.pow(2, 5))});
-            }, 30000);
+            }, 10000);
         }
 
         function autoloadNotifications() {
