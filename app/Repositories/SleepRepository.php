@@ -59,7 +59,13 @@ class SleepRepository
 
             $wake_time = new Carbon($wake_time);
             $sleep_time = new Carbon($sleep->sleep);
-            if ($sleep_time->gte($wake_time)) $sleep_time->subDay();
+            if ($sleep_time->eq($wake_time)) {
+                self::deleteCurrentSleeping();
+                return null;
+            }
+            if ($sleep_time->gt($wake_time)) {
+                $sleep_time->subDay();
+            }
 
             $minutes = $sleep_time->diffInMinutes($wake_time);
             $sleep->hours = floor($minutes / 60);
