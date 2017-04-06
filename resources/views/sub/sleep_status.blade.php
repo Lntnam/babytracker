@@ -18,8 +18,7 @@
             </button>
         </div>
         <div class="col-5 push-1">
-            <button id="cancel-sleep-button" type="button" class="btn btn-danger btn-block"
-                    onclick="cancelSleepClick()"><i
+            <button id="cancel-sleep-button" type="button" class="btn btn-danger btn-block"><i
                         class="fa fa-minus-square" aria-hidden="true"></i> cancel
             </button>
         </div>

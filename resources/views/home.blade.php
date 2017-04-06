@@ -70,7 +70,9 @@
                     <table class="table table-sm">
                         <thead>
                         <tr>
-                            <th colspan="2">Yesterday <small>{{ $yesterday_total_meal }}ml</small></th>
+                            <th colspan="2">Yesterday
+                                <small>{{ $yesterday_total_meal }}ml</small>
+                            </th>
                         </tr>
                         </thead>
                         <tbody>
@@ -105,7 +107,10 @@
                     <table class="table table-sm">
                         <thead>
                         <tr>
-                            <th colspan="2">Yesterday <small>{{ $yesterday_total_sleep->hours }}h {{ $yesterday_total_sleep->minutes }}m</small></th>
+                            <th colspan="2">Yesterday
+                                <small>{{ $yesterday_total_sleep->hours }}h {{ $yesterday_total_sleep->minutes }}m
+                                </small>
+                            </th>
                         </tr>
                         </thead>
                         <tbody>
@@ -120,20 +125,22 @@
         </div>
     </div>
 
-    <div class="modal fade" id="changeWeightModal" tabindex="-1" role="dialog" aria-labelledby="Edit Weight" aria-hidden="true">
-    @include('modals.change_weight_modal')
+    <div class="modal fade" id="changeWeightModal" tabindex="-1" role="dialog" aria-labelledby="Edit Weight"
+         aria-hidden="true">
+        @include('modals.change_weight_modal')
     </div>
 
     <div class="modal fade" id="addMealModal" tabindex="-1" role="dialog" aria-labelledby="Add Meal" aria-hidden="true">
-    @include('modals.add_meal_modal')
+        @include('modals.add_meal_modal')
     </div>
 
-    <div class="modal fade" id="addSleepModal" tabindex="-1" role="dialog" aria-labelledby="Sleeping" aria-hidden="true">
-    @include('modals.add_sleep_modal')
+    <div class="modal fade" id="addSleepModal" tabindex="-1" role="dialog" aria-labelledby="Sleeping"
+         aria-hidden="true">
+        @include('modals.add_sleep_modal')
     </div>
 
     <div class="modal fade" id="wakeUpModal" tabindex="-1" role="dialog" aria-labelledby="Wake Up" aria-hidden="true">
-    @include('modals.wake_up_modal')
+        @include('modals.wake_up_modal')
     </div>
 
 @endsection
@@ -147,76 +154,141 @@
     <script type="text/javascript">
         var timeout_id;
         var autotask_checker = 0;
+        var clockpicker_options = {
+            default: 'now',
+            autoclose: true
+        };
 
         $(document).ready(function () {
-            var clockpicker_options = {
-                default: 'now',
-                autoclose: true
-            };
+            initClockpicker();
+            assignEvents();
+
+            autoload();
+            autoloadNotifications();
+        });
+
+        var task_count = 11;
+        function autoload() {
+            timeout_id = setTimeout(function () {
+                $('#age-weight-height').load('{!! route('Ajax.LoadAgeWeightHeightView') !!}', function () {
+                    post_autload(Math.pow(2, 0))
+                });
+                $('#meal-snapshot').load('{!! route('Ajax.LoadMealSnapshotView') !!}', function () {
+                    post_autload(Math.pow(2, 1))
+                });
+                $('#today-meals-table').load('{!! route('Ajax.LoadTodayMealsView') !!}', function () {
+                    post_autload(Math.pow(2, 2))
+                });
+                $('#sleep-status').load('{!! route('Ajax.LoadSleepStatusView') !!}', function () {
+                    post_autload(Math.pow(2, 3))
+                });
+                $('#sleep-snapshot').load('{!! route('Ajax.LoadSleepSnapshotView') !!}', function () {
+                    post_autload(Math.pow(2, 4))
+                });
+                $('#today-sleep-table').load('{!! route('Ajax.LoadTodaySleepsView') !!}', function () {
+                    post_autload(Math.pow(2, 5))
+                });
+
+                $('#addMealModal').load('{!! route('Ajax.LoadModal', ['name' => 'add_meal_modal']) !!}', function () {
+                    post_autload(Math.pow(2, 6))
+                });
+                $('#addSleepModal').load('{!! route('Ajax.LoadModal', ['name' => 'add_sleep_modal']) !!}', function () {
+                    post_autload(Math.pow(2, 7))
+                });
+                $('#changeWeightModal').load('{!! route('Ajax.LoadModal', ['name' => 'change_weight_modal']) !!}', function () {
+                    post_autload(Math.pow(2, 8))
+                });
+                $('#wakeUpModal').load('{!! route('Ajax.LoadModal', ['name' => 'wake_up_modal']) !!}', function () {
+                    post_autload(Math.pow(2, 9))
+                });
+
+                $('#next-day').load('{!! route('Ajax.LoadEndDayView') !!}', function () {
+                    post_autload(Math.pow(2, 10))
+                });
+            }, 10000);
+        }
+
+        function autoloadNotifications() {
+            timeout_id = setTimeout(function () {
+                $('#notifications').load('{!! route('Ajax.LoadNotifications') !!}', function () {
+                    autoloadNotifications()
+                });
+            }, 600000);
+        }
+
+        function post_autload(value) {
+            autotask_checker += value;
+
+            initClockpicker();
+            assignEvents();
+
+            if (autotask_checker == Math.pow(2, task_count) - 1) {
+                autotask_checker = 0;
+                autoload();
+            }
+        }
+
+        function initClockpicker() {
             $('#meal-time-input').clockpicker(clockpicker_options);
             $('#sleep-time-input').clockpicker(clockpicker_options);
             $('#wake-time-input').clockpicker(clockpicker_options);
+        }
 
-            //-- auto reload
-            autoload();
-            autoloadNotifications();
+        function assignEvents() {
 
-            //-- closing alerts
-            $('.alert').on('closed.bs.alert', function () {
-                $.post("{{ route('Ajax.CloseNotification') }}", {id: $(this).find('input').val()}, function () {
-                    console.log('CloseNotification returned.');
+            $('.alert').on('closed.bs.alert', closeAlert);
+
+            $('#changeWeightModal').find('button.btn-primary').off('click').on('click', saveWeight);
+            $('#addMealModal').find('button.btn-primary').off('click').on('click', saveMeal);
+            $('#addSleepModal').find('button.btn-primary').off('click').on('click', saveSleep);
+            $('#wakeUpModal').find('button.btn-primary').off('click').on('click', saveSleep);
+            $('#cancel-sleep-button').off('click').on('click', cancelSleep);
+        }
+
+        function closeAlert() {
+            $.post("{{ route('Ajax.CloseNotification') }}", {id: $(this).find('input').val()});
+        }
+
+        function saveWeight() {
+            $(this).append('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>')
+            $(this).prop('disabled', true);
+            clearTimeout(timeout_id);
+            $.post("{{ route('Ajax.SaveMeasurements') }}", {
+                weight: $('#weight-input').val(),
+                height: $('#height-input').val()
+            }, function () {
+                $('#age-weight-height').load('{!! route('Ajax.LoadAgeWeightHeightView') !!}', function () {
+                    $('#changeWeightModal').find('button.btn-primary').prop('disabled', false).empty().text('Save');
+                    $('#changeWeightModal').modal('hide');
+
+                    assignEvents();
+                    autoload();
                 });
             });
+        }
 
-            //-- saving weight & height
-            $('#changeWeightModal').find('button.btn-primary').on('click', function () {
-                $(this).append('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>')
-                $(this).prop('disabled', true);
-                clearTimeout(timeout_id);
-                $.post("{{ route('Ajax.SaveMeasurements') }}", {
-                    weight: $('#weight-input').val(),
-                    height: $('#height-input').val()
-                }, function () {
-                    console.log('SaveMeasurements returned.');
+        function saveMeal() {
+            $(this).append('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>')
+            $(this).prop('disabled', true);
+            clearTimeout(timeout_id);
+            $.post("{{ route('Ajax.AddMeal') }}", {
+                value: $('#meal-input').val(),
+                type: $('#bottle-fed').prop("checked") ? $('#bottle-fed').attr('value') : $('#breast-fed').attr('value'),
+                at: $('#meal-time-input').val()
+            }, function () {
+                $('#meal-snapshot').load('{!! route('Ajax.LoadMealSnapshotView') !!}', function () {
+                    $('#today-meals-table').load('{!! route('Ajax.LoadTodayMealsView') !!}', function () {
+                        $('#addMealModal').find('button.btn-primary').prop('disabled', false).empty().text('Save');
+                        $('#addMealModal').modal('hide');
 
-                    $('#age-weight-height').load('{!! route('Ajax.LoadAgeWeightHeightView') !!}', function() {
-                        $('#changeWeightModal').find('button.btn-primary').empty().text('Save');
-                        $('#changeWeightModal').find('button.btn-primary').prop('disabled', false);
-                        $('#changeWeightModal').modal('hide');
+                        assignEvents();
                         autoload();
                     });
                 });
             });
+        }
 
-            //-- adding meal
-            $('#addMealModal').find('button.btn-primary').on('click', function () {
-                $(this).append('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>')
-                $(this).prop('disabled', true);
-                clearTimeout(timeout_id);
-                $.post("{{ route('Ajax.AddMeal') }}", {
-                    value: $('#meal-input').val(),
-                    type: $('#bottle-fed').prop("checked") ? $('#bottle-fed').attr('value') : $('#breast-fed').attr('value'),
-                    at: $('#meal-time-input').val()
-                }, function () {
-                    console.log('AddMeal returned.');
-
-                    $('#meal-snapshot').load('{!! route('Ajax.LoadMealSnapshotView') !!}', function() {
-                        $('#today-meals-table').load('{!! route('Ajax.LoadTodayMealsView') !!}', function() {
-                            $('#addMealModal').find('button.btn-primary').empty().text('Save');
-                            $('#addMealModal').modal('hide');
-                            $('#addMealModal').find('button.btn-primary').prop('disabled', false);
-                            autoload();
-                        });
-                    });
-                });
-            });
-
-            $('#addSleepModal').find('button.btn-primary').on('click', sleepClick);
-            $('#wakeUpModal').find('button.btn-primary').on('click', sleepClick);
-        });
-
-        //-- sleep
-        function sleepClick() {
+        function saveSleep() {
             $(this).append('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>')
             $(this).prop('disabled', true);
             clearTimeout(timeout_id);
@@ -224,22 +296,21 @@
                 sleep_time: $('#sleep-time-input').val(),
                 wake_time: $('#wake-time-input').val()
             }, function (data) {
-                console.log('ToggleSleep returned:');
-                console.log(data);
-
-                $('#sleep-status').load('{!! route('Ajax.LoadSleepStatusView') !!}', function() {
+                $('#sleep-status').load('{!! route('Ajax.LoadSleepStatusView') !!}', function () {
                     if (data.sleeping) { // from wake to sleep
-                        $('#addSleepModal').find('button.btn-primary').empty().text('Save');
+                        $('#addSleepModal').find('button.btn-primary').prop('disabled', false).empty().text('Save');
                         $('#addSleepModal').modal('hide');
-                        $('#addSleepModal').find('button.btn-primary').prop('disabled', false);
+
+                        assignEvents();
                         autoload();
                     }
                     else { // from sleep to wake
-                        $('#sleep-snapshot').load('{!! route('Ajax.LoadSleepSnapshotView') !!}', function() {
-                            $('#today-sleep-table').load('{!! route('Ajax.LoadTodaySleepsView') !!}', function() {
-                                $('#wakeUpModal').find('button.btn-primary').empty().text('Save');
+                        $('#sleep-snapshot').load('{!! route('Ajax.LoadSleepSnapshotView') !!}', function () {
+                            $('#today-sleep-table').load('{!! route('Ajax.LoadTodaySleepsView') !!}', function () {
+                                $('#wakeUpModal').find('button.btn-primary').prop('disabled', false).empty().text('Save');
                                 $('#wakeUpModal').modal('hide');
-                                $('#wakeUpModal').find('button.btn-primary').prop('disabled', false);
+
+                                assignEvents();
                                 autoload();
                             });
                         });
@@ -247,53 +318,18 @@
                     }
                 });
             });
-        };
+        }
 
-        function cancelSleepClick() {
+        function cancelSleep() {
             $('#cancel-sleep-button').append('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>')
             $('#cancel-sleep-button').prop('disabled', true);
             clearTimeout(timeout_id);
             $.post("{{ route('Ajax.CancelSleep') }}", {}, function () {
-                console.log('CancelSleep returned.');
-
-                $('#sleep-status').load('{!! route('Ajax.LoadSleepStatusView') !!}', function() {
-                    $('#cancel-sleep-button').prop('disabled', false);
+                $('#sleep-status').load('{!! route('Ajax.LoadSleepStatusView') !!}', function () {
+                    assignEvents();
                     autoload();
                 });
             });
-        }
-
-        var task_count = 11;
-        function autoload() {
-            timeout_id = setTimeout(function () {
-                $('#age-weight-height').load('{!! route('Ajax.LoadAgeWeightHeightView') !!}', function() {autotask_check(Math.pow(2, 0))});
-                $('#meal-snapshot').load('{!! route('Ajax.LoadMealSnapshotView') !!}', function() {autotask_check(Math.pow(2, 1))});
-                $('#today-meals-table').load('{!! route('Ajax.LoadTodayMealsView') !!}', function() {autotask_check(Math.pow(2, 2))});
-                $('#sleep-status').load('{!! route('Ajax.LoadSleepStatusView') !!}', function() {autotask_check(Math.pow(2, 3))});
-                $('#sleep-snapshot').load('{!! route('Ajax.LoadSleepSnapshotView') !!}', function() {autotask_check(Math.pow(2, 4))});
-                $('#today-sleep-table').load('{!! route('Ajax.LoadTodaySleepsView') !!}', function() {autotask_check(Math.pow(2, 5))});
-
-                $('#addMealModal').load('{!! route('Ajax.LoadModal', ['name' => 'add_meal_modal']) !!}', function() {autotask_check(Math.pow(2, 6))});
-                $('#addSleepModal').load('{!! route('Ajax.LoadModal', ['name' => 'add_sleep_modal']) !!}', function() {autotask_check(Math.pow(2, 7))});
-                $('#changeWeightModal').load('{!! route('Ajax.LoadModal', ['name' => 'change_weight_modal']) !!}', function() {autotask_check(Math.pow(2, 8))});
-                $('#wakeUpModal').load('{!! route('Ajax.LoadModal', ['name' => 'wake_up_modal']) !!}', function() {autotask_check(Math.pow(2, 9))});
-
-                $('#next-day').load('{!! route('Ajax.LoadEndDayView') !!}', function() {autotask_check(Math.pow(2, 10))});
-            }, 10000);
-        }
-
-        function autoloadNotifications() {
-            timeout_id = setTimeout(function () {
-                $('#notifications').load('{!! route('Ajax.LoadNotifications') !!}', function() {autoloadNotifications()});
-            }, 600000);
-        }
-
-        function autotask_check(value) {
-            autotask_checker += value;
-            if (autotask_checker == Math.pow(2, task_count) - 1) {
-                autotask_checker = 0;
-                autoload();
-            }
         }
     </script>
 @endsection
