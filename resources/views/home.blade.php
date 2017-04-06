@@ -167,7 +167,6 @@
             autoloadNotifications();
         });
 
-        var task_count = 7;
         function autoload() {
             timeout_id = setTimeout(function () {
                 $('#age-weight-height').load('{!! route('Ajax.LoadAgeWeightHeightView') !!}', function () {
