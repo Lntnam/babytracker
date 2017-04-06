@@ -116,177 +116,26 @@
             </div>
         </div>
         <div class="tab-pane" id="next-day" role="tabpanel">
-            <div class="row">
-                <div class="col-12">
-                    @if ($can_close)
-                        <p class="text-danger">This action is not reversible. All current values will be cleared and you
-                            cannot enter more data for today.</p>
-                        <p class="text-danger">Do you still want to end the day?</p>
-                    @else
-                        <p class="text-info">
-                            You cannot close today as it's not passed midnight.
-                        </p>
-                    @endif
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-6 push-3">
-                    @if ($can_close)
-                        <a id="end-day-button" class="btn btn-danger btn-block" href="{{ route('CloseDay') }}"><i
-                                    class="fa fa-step-forward" aria-hidden="true"></i> End Day
-                        </a>
-                    @endif
-                </div>
-            </div>
+            @include('sub.end_day')
         </div>
     </div>
 
-    <!-- Change Weight Modal -->
-    <div class="modal fade" id="changeWeightModal" tabindex="-1" role="dialog" aria-labelledby="Edit Weight"
-         aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="changeWeightModalLabel">Edit Weight</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="weight-input" class="sr-only">Weight in kg</label>
-                        <div class="input-group">
-                            <input class="form-control focus" type="number" value="{{ $weight }}" id="weight-input"
-                                   placeholder="Weight in kg">
-                            <div class="input-group-addon">kg</div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="weight-input" class="sr-only">Height in cm</label>
-                        <div class="input-group">
-                            <input class="form-control focus" type="number" value="{{ $height }}" id="height-input"
-                                   placeholder="Height in cm">
-                            <div class="input-group-addon">cm</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save</button>
-                </div>
-            </div>
-        </div>
+    <div class="modal fade" id="changeWeightModal" tabindex="-1" role="dialog" aria-labelledby="Edit Weight" aria-hidden="true">
+    @include('modals.change_weight_modal')
     </div>
 
-    <!-- Add Meal Modal -->
     <div class="modal fade" id="addMealModal" tabindex="-1" role="dialog" aria-labelledby="Add Meal" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addMealModalLabel">Add Meal</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="meal-time-input" class="sr-only">Time</label>
-                        <div class="input-group clockpicker" data-placement="right" data-align="top"
-                             data-autoclose="true">
-                            <input id="meal-time-input" type="text" class="form-control"
-                                   value="{{ Carbon::now()->format('H:i') }}" readonly="true">
-                            <span class="input-group-addon"><i class="fa fa-clock-o" aria-hidden="true"></i></span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="meal-input" class="sr-only">ml</label>
-                        <div class="input-group">
-                            <input class="form-control" type="number" id="meal-input" placeholder="Amount in ml">
-                            <div class="input-group-addon">ml</div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="sr-only">Feeding Type</label>
-                        <label class="custom-control custom-radio">
-                            <input id="bottle-fed" name="feed_type" value="bottle" type="radio"
-                                   class="custom-control-input" checked="checked">
-                            <span class="custom-control-indicator"></span>
-                            <span class="custom-control-description">Bottle</span>
-                        </label>
-                        <label class="custom-control custom-radio">
-                            <input id="breast-fed" name="feed_type" value="breast" type="radio"
-                                   class="custom-control-input">
-                            <span class="custom-control-indicator"></span>
-                            <span class="custom-control-description">Breast</span>
-                        </label>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save</button>
-                </div>
-            </div>
-        </div>
+    @include('modals.add_meal_modal')
     </div>
 
-    <!-- Add Sleep Modal -->
-    <div class="modal fade" id="addSleepModal" tabindex="-1" role="dialog" aria-labelledby="Sleeping"
-         aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addSleepModalLabel">Sleeping</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="meal-time-input" class="sr-only">Time</label>
-                        <div class="input-group clockpicker" data-placement="right" data-align="top"
-                             data-autoclose="true">
-                            <input id="sleep-time-input" type="text" class="form-control"
-                                   value="{{ Carbon::now()->format('H:i') }}" readonly="true">
-                            <span class="input-group-addon"><i class="fa fa-clock-o" aria-hidden="true"></i></span>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save</button>
-                </div>
-            </div>
-        </div>
+    <div class="modal fade" id="addSleepModal" tabindex="-1" role="dialog" aria-labelledby="Sleeping" aria-hidden="true">
+    @include('modals.add_sleep_modal')
     </div>
 
-    <!-- Wake Up Modal -->
     <div class="modal fade" id="wakeUpModal" tabindex="-1" role="dialog" aria-labelledby="Wake Up" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="wakeUpModalLabel">Wake Up</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="meal-time-input" class="sr-only">Time</label>
-                        <div class="input-group clockpicker" data-placement="right" data-align="top"
-                             data-autoclose="true">
-                            <input id="wake-time-input" type="text" class="form-control" readonly="true"
-                                   value="{{ Carbon::now()->format('H:i') }}">
-                            <span class="input-group-addon"><i class="fa fa-clock-o" aria-hidden="true"></i></span>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save</button>
-                </div>
-            </div>
-        </div>
+    @include('modals.wake_up_modal')
     </div>
+
 @endsection
 
 @section('stylesheets')
@@ -414,6 +263,7 @@
             });
         }
 
+        var task_count = 11;
         function autoload() {
             timeout_id = setTimeout(function () {
                 $('#age-weight-height').load('{!! route('Ajax.LoadAgeWeightHeightView') !!}', function() {autotask_check(Math.pow(2, 0))});
@@ -422,6 +272,13 @@
                 $('#sleep-status').load('{!! route('Ajax.LoadSleepStatusView') !!}', function() {autotask_check(Math.pow(2, 3))});
                 $('#sleep-snapshot').load('{!! route('Ajax.LoadSleepSnapshotView') !!}', function() {autotask_check(Math.pow(2, 4))});
                 $('#today-sleep-table').load('{!! route('Ajax.LoadTodaySleepsView') !!}', function() {autotask_check(Math.pow(2, 5))});
+
+                $('#addMealModal').load('{!! route('Ajax.LoadModal', ['name' => 'add_meal_modal']) !!}', function() {autotask_check(Math.pow(2, 6))});
+                $('#addSleepModal').load('{!! route('Ajax.LoadModal', ['name' => 'add_sleep_modal']) !!}', function() {autotask_check(Math.pow(2, 7))});
+                $('#changeWeightModal').load('{!! route('Ajax.LoadModal', ['name' => 'change_weight_modal']) !!}', function() {autotask_check(Math.pow(2, 8))});
+                $('#wakeUpModal').load('{!! route('Ajax.LoadModal', ['name' => 'wake_up_modal']) !!}', function() {autotask_check(Math.pow(2, 9))});
+
+                $('#next-day').load('{!! route('Ajax.LoadEndDayView') !!}', function() {autotask_check(Math.pow(2, 10))});
             }, 10000);
         }
 
@@ -433,7 +290,7 @@
 
         function autotask_check(value) {
             autotask_checker += value;
-            if (autotask_checker == Math.pow(2, 6) - 1) {
+            if (autotask_checker == Math.pow(2, task_count) - 1) {
                 autotask_checker = 0;
                 autoload();
             }

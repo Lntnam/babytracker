@@ -55,7 +55,6 @@ class HomeController extends Controller
             'yesterday_sleeps' => $yesterday_sleeps,
             'yesterday_total_sleep' => $yesterday_total_sleep,
 
-            'can_close' => Carbon::today()->gt(new Carbon($current_date)),
             'current_date' => $current_date,
         ]);
     }

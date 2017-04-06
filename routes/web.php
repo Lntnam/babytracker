@@ -32,12 +32,17 @@ Route::get('ajax/load_meal_snapshot_view', 'AjaxController@loadMealSnapshotView'
 Route::get('ajax/load_today_sleeps_view', 'AjaxController@loadTodaySleepsView')->name('Ajax.LoadTodaySleepsView');
 Route::get('ajax/load_sleep_snapshot_view', 'AjaxController@loadSleepSnapshotView')->name('Ajax.LoadSleepSnapshotView');
 Route::get('ajax/load_notifications', 'AjaxController@loadNotifications')->name('Ajax.LoadNotifications');
+Route::get('ajax/load_end_day_view', 'AjaxController@loadEndDayView')->name('Ajax.LoadEndDayView');
 
 Route::get('/meal', 'MealReportController@index')->name('MealReport');
 
 Route::get('/weight', 'WeightReportController@index')->name('WeightReport');
 
 Route::get('/sleep', 'SleepReportController@index')->name('SleepReport');
+
+Route::get('/load_modal/{name}', function($name) {
+    return view('modals.'.$name);
+})->name('Ajax.LoadModal');
 
 Route::get('/config', function() {
     return view('config');

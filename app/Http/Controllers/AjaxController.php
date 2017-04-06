@@ -114,6 +114,12 @@ class AjaxController extends Controller
         ]);
     }
 
+    public function loadEndDayView() {
+        return view('sub.end_day', [
+            'current_date' => DayRecordRepository::getCurrentDate()
+        ]);
+    }
+
     public function loadNotifications()
     {
         return view('sub.notifications', [
