@@ -3,7 +3,9 @@
         <div class="col-12 text-center">
             <p class="lead">sleeping from
                 <mark
-                        id="sleep-from">{{ (new Carbon($sleeping_record->sleep))->format('H:i') }}</mark>
+                        id="sleep-from">{{ Utilities::displayTimeString($sleeping_record->sleep) }} [<span
+                            id="sleeping-duration">{{ Utilities::displayTimeDuration($sleeping_record->sleep, Carbon::now()) }}</span>]
+                </mark>
             </p>
         </div>
     </div>
@@ -16,7 +18,8 @@
             </button>
         </div>
         <div class="col-5 push-1">
-            <button id="cancel-sleep-button" type="button" class="btn btn-danger btn-block" onclick="cancelSleepClick()"><i
+            <button id="cancel-sleep-button" type="button" class="btn btn-danger btn-block"
+                    onclick="cancelSleepClick()"><i
                         class="fa fa-minus-square" aria-hidden="true"></i> cancel
             </button>
         </div>
