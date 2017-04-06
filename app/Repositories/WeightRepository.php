@@ -58,4 +58,10 @@ class WeightRepository
             ->orderBy('day', 'asc')
             ->get();
     }
+
+    public static function getLatestRecord() {
+        return DayRecord::whereNotNull('weight')
+            ->orderBy('day', 'desc')
+            ->first();
+    }
 }

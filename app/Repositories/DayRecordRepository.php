@@ -76,5 +76,20 @@ class DayRecordRepository
 
         if ($sleeping)
             SleepRepository::addSleep(Carbon::today()->toTimeString()); // 00:00
+
+        /**
+         *  NOTIFICATION
+         */
+        /** measure day */
+        $weight_frequency = VariableRepository::getPreferenceByKey('weight_frequency');
+        $latest_weight = WeightRepository::getLatestRecord();
+        $last_weight_date = new Carbon($latest_weight->day);
+        $next_weight_date = $last_weight_date->copy()->addDay($weight_frequency);
+        if ($next_weight_date->eq(Carbon::today())) {
+            NotificationRepository::createNotification('warning', 'Reminder!', 'Weight day today.');
+        }
+        else if ($next_weight_date->lt(Carbon::today())) {
+            NotificationRepository::createNotification('danger', 'Alert!', 'Missed weight day. ' . $next_weight_date->diffForHumans(Carbon::today()));
+        }
     }
 }
