@@ -167,7 +167,7 @@
             autoloadNotifications();
         });
 
-        var task_count = 11;
+        var task_count = 7;
         function autoload() {
             timeout_id = setTimeout(function () {
                 $('#age-weight-height').load('{!! route('Ajax.LoadAgeWeightHeightView') !!}', function () {
@@ -189,23 +189,24 @@
                     post_autload(Math.pow(2, 5))
                 });
 
+                $('#next-day').load('{!! route('Ajax.LoadEndDayView') !!}', function () {
+                    post_autload(Math.pow(2, 6))
+                });
+
                 {{--$('#addMealModal').load('{!! route('Ajax.LoadModal', ['name' => 'add_meal_modal']) !!}', function () {--}}
-                    {{--post_autload(Math.pow(2, 6))--}}
+                {{--post_autload(Math.pow(2, 6))--}}
                 {{--});--}}
                 {{--$('#addSleepModal').load('{!! route('Ajax.LoadModal', ['name' => 'add_sleep_modal']) !!}', function () {--}}
-                    {{--post_autload(Math.pow(2, 7))--}}
+                {{--post_autload(Math.pow(2, 7))--}}
                 {{--});--}}
                 {{--$('#changeWeightModal').load('{!! route('Ajax.LoadModal', ['name' => 'change_weight_modal']) !!}', function () {--}}
-                    {{--post_autload(Math.pow(2, 8))--}}
+                {{--post_autload(Math.pow(2, 8))--}}
                 {{--});--}}
                 {{--$('#wakeUpModal').load('{!! route('Ajax.LoadModal', ['name' => 'wake_up_modal']) !!}', function () {--}}
-                    {{--post_autload(Math.pow(2, 9))--}}
+                {{--post_autload(Math.pow(2, 9))--}}
                 {{--});--}}
 
-                $('#next-day').load('{!! route('Ajax.LoadEndDayView') !!}', function () {
-                    post_autload(Math.pow(2, 10))
-                });
-            }, 10000);
+            }, 30000);
         }
 
         function autoloadNotifications() {
@@ -222,7 +223,15 @@
 //            initClockpicker();
             assignEvents();
 
-            if (autotask_checker == Math.pow(2, task_count) - 1) {
+            if (autotask_checker == 0
+                + Math.pow(2, 0)
+                + Math.pow(2, 1)
+                + Math.pow(2, 2)
+                + Math.pow(2, 3)
+                + Math.pow(2, 4)
+                + Math.pow(2, 5)
+                + Math.pow(2, 6)
+            ) {
                 autotask_checker = 0;
                 autoload();
             }
