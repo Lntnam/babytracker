@@ -9,6 +9,8 @@
 namespace App;
 
 
+use Carbon\Carbon;
+
 class Utilities
 {
     private static $zscore_table;
@@ -54,5 +56,38 @@ class Utilities
         $line = str_getcsv(self::$zscore_table[$age + 1], self::ZSCORE_DELIMITER);
         array_shift($line);
         return $line;
+    }
+
+    public static function displayTimeDuration($start, $end) {
+        $start_object = Carbon::today();
+        $end_object = Carbon::today();
+
+        if (is_string($start)) {
+            $start_object->setTimeFromTimeString($start);
+        } else {
+            $start_object = $start;
+        }
+        if (is_string($end)) {
+            $end_object->setTimeFromTimeString($end);
+            if ($end_object->lt($start_object)) {
+                $end_object->addDay();
+            }
+        } else {
+            $end_object = $end;
+        }
+
+        $interval = $start_object->diffInMinutes($end_object);
+        return floor($interval / 60) . 'h ' . ($interval % 60) . 'm';
+    }
+
+    public static function displayTimeString($input) {
+        $time_object = Carbon::today();
+        if (is_string($input)) {
+            $time_object->setTimeFromTimeString($input);
+        }
+        else if (is_int($input)) {
+            $time_object->setTime(floor($input / 60), $input % 60);
+        }
+        return $time_object->format('H:i');
     }
 }
