@@ -48,7 +48,7 @@
             $col = 1;
         @endphp
         @while ($i < $count && ($col == 2 || $i < $half))
-            <div class="col-6 col-sm-6 col-md-4 col-lg-3 col-xl-3">
+            <div class="col-6 col-sm-6">
                 <div class="row report-cell">
                     <div class="col-6">
                         <strong>{{ (new Carbon($dob))->diffInDays(new Carbon($weight_records[$i]->day)) }}
