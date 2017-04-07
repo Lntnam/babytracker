@@ -53,7 +53,7 @@
                     <div class="col-6">
                         <strong>{{ (new Carbon($dob))->diffInDays(new Carbon($weight_records[$i]->day)) }}
                             days</strong></div>
-                    <div class="col-6">{{ round($weight_records[$i]->weight, 1) }}kg</div>
+                    <div class="col-6">{{ $weight_records[$i]->weight }}kg</div>
                 </div>
             </div>
             @php
