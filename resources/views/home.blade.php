@@ -155,12 +155,12 @@
         var timeout_id;
         var autotask_checker = 0;
         var clockpicker_options = {
-            default: 'now',
             autoclose: true
         };
 
         $(document).ready(function () {
             initClockpicker();
+
             assignEvents();
 
             autoload();
@@ -237,6 +237,36 @@
         }
 
         function initClockpicker() {
+            $('#addMealModal').on('show.bs.modal', function (e) {
+                $.ajax({
+                    type: "GET",
+                    url: '{!! route('Ajax.GetServerTime') !!}',
+                    complete: function(data) {
+                        $('#meal-time-input').val(data.responseText);
+                    }
+                });
+            });
+
+            $('#addSleepModal').on('show.bs.modal', function (e) {
+                $.ajax({
+                    type: "GET",
+                    url: '{!! route('Ajax.GetServerTime') !!}',
+                    complete: function(data) {
+                        $('#sleep-time-input').val(data.responseText);
+                    }
+                });
+            });
+
+            $('#wakeUpModal').on('show.bs.modal', function (e) {
+                $.ajax({
+                    type: "GET",
+                    url: '{!! route('Ajax.GetServerTime') !!}',
+                    complete: function(data) {
+                        $('#wake-time-input').val(data.responseText);
+                    }
+                });
+            });
+
             $('#meal-time-input').clockpicker(clockpicker_options);
             $('#sleep-time-input').clockpicker(clockpicker_options);
             $('#wake-time-input').clockpicker(clockpicker_options);
@@ -250,6 +280,7 @@
             $('#addMealModal').find('button.btn-primary').off('click').on('click', saveMeal);
             $('#addSleepModal').find('button.btn-primary').off('click').on('click', saveSleep);
             $('#wakeUpModal').find('button.btn-primary').off('click').on('click', saveSleep);
+
             $('#cancel-sleep-button').off('click').on('click', cancelSleep);
         }
 

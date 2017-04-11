@@ -11,8 +11,7 @@
                 <label for="sleep-time-input" class="sr-only">Time</label>
                 <div class="input-group clockpicker" data-placement="right" data-align="top"
                      data-autoclose="true">
-                    <input id="sleep-time-input" type="text" class="form-control"
-                           value="{{ Carbon::now()->format('H:i') }}" readonly="true">
+                    <input id="sleep-time-input" type="text" class="form-control" placeholder="loading..." readonly="true">
                     <span class="input-group-addon"><i class="fa fa-clock-o" aria-hidden="true"></i></span>
                 </div>
             </div>
