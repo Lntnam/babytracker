@@ -8,7 +8,7 @@
         </div>
         <div class="modal-body">
             <div class="form-group">
-                <label for="meal-time-input" class="sr-only">Time</label>
+                <label for="wake-time-input" class="sr-only">Time</label>
                 <div class="input-group clockpicker" data-placement="right" data-align="top"
                      data-autoclose="true">
                     <input id="wake-time-input" type="text" class="form-control" readonly="true"
