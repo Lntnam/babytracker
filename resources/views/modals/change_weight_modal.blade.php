@@ -15,14 +15,14 @@
                     <div class="input-group-addon">kg</div>
                 </div>
             </div>
-            <div class="form-group">
-                <label for="weight-input" class="sr-only">Height in cm</label>
-                <div class="input-group">
-                    <input class="form-control focus" type="number" id="height-input"
-                           placeholder="Height in cm">
-                    <div class="input-group-addon">cm</div>
-                </div>
-            </div>
+            {{--<div class="form-group">--}}
+                {{--<label for="weight-input" class="sr-only">Height in cm</label>--}}
+                {{--<div class="input-group">--}}
+                    {{--<input class="form-control focus" type="number" id="height-input"--}}
+                           {{--placeholder="Height in cm">--}}
+                    {{--<div class="input-group-addon">cm</div>--}}
+                {{--</div>--}}
+            {{--</div>--}}
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
