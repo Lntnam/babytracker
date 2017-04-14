@@ -91,11 +91,13 @@
                 @include('sub.sleep_status')
             </div>
             <div class="row"> <!-- Sleep today vs yesterday -->
-                <div class="col-6">
+                <div class="col-12">
                     <table class="table table-sm">
                         <thead>
                         <tr>
-                            <th colspan="2">Today</th>
+                            <th>Sleep</th>
+                            <th>Wake up</th>
+                            <th>Duration</th>
                         </tr>
                         </thead>
                         <tbody id="today-sleep-table">
@@ -103,21 +105,33 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="col-6">
-                    <table class="table table-sm">
-                        <thead>
-                        <tr>
-                            <th colspan="2">Yesterday
-                                <small>{{ $yesterday_total_sleep->hours }}h {{ $yesterday_total_sleep->minutes }}m
-                                </small>
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @include('sub.sleeps_table', ['sleep_list' => $yesterday_sleeps])
-                        </tbody>
-                    </table>
-                </div>
+                {{--<div class="col-6">--}}
+                    {{--<table class="table table-sm">--}}
+                        {{--<thead>--}}
+                        {{--<tr>--}}
+                            {{--<th colspan="2">Today</th>--}}
+                        {{--</tr>--}}
+                        {{--</thead>--}}
+                        {{--<tbody id="today-sleep-table">--}}
+                        {{--@include('sub.sleeps_table', ['sleep_list' => $today_sleeps])--}}
+                        {{--</tbody>--}}
+                    {{--</table>--}}
+                {{--</div>--}}
+                {{--<div class="col-6">--}}
+                    {{--<table class="table table-sm">--}}
+                        {{--<thead>--}}
+                        {{--<tr>--}}
+                            {{--<th colspan="2">Yesterday--}}
+                                {{--<small>{{ $yesterday_total_sleep->hours }}h {{ $yesterday_total_sleep->minutes }}m--}}
+                                {{--</small>--}}
+                            {{--</th>--}}
+                        {{--</tr>--}}
+                        {{--</thead>--}}
+                        {{--<tbody>--}}
+                        {{--@include('sub.sleeps_table', ['sleep_list' => $yesterday_sleeps])--}}
+                        {{--</tbody>--}}
+                    {{--</table>--}}
+                {{--</div>--}}
             </div>
         </div>
         <div class="tab-pane" id="next-day" role="tabpanel">
@@ -360,6 +374,8 @@
         }
 
         function cancelSleep() {
+            if (!confirm('Are you sure')) return;
+
             $('#cancel-sleep-button').append('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>')
             $('#cancel-sleep-button').prop('disabled', true);
             clearTimeout(timeout_id);
