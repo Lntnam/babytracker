@@ -57,7 +57,7 @@ class DayRecordRepository
     public static function getPastRecords($no_of_days)
     {
         return DayRecord::whereNotNull('meal')
-            ->orderBy('day', 'asc')
+            ->orderBy('day', 'desc')
             ->take($no_of_days)
             ->get();
     }
