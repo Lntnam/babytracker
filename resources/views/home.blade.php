@@ -41,7 +41,7 @@
 
     <!-- Tab panes -->
     <div class="tab-content">
-        <div class="tab-pane active" id="eat" role="tabpanel">
+		<div class="tab-pane active" id="eat" role="tabpanel">
             <!-- Meal -->
             <div id="meal-snapshot">
                 @include('sub.meal_snapshot')
@@ -81,7 +81,7 @@
                     </table>
                 </div>
             </div>
-        </div>
+		</div>
         <div class="tab-pane" id="sleep" role="tabpanel">
             <!-- Sleep -->
             <div id="sleep-snapshot">

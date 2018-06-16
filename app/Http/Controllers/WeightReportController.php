@@ -22,13 +22,13 @@ class WeightReportController extends Controller
         $weight_frequency = VariableRepository::getPreferenceByKey('weight_frequency');
         $current_weight = WeightRepository::getCurrentWeight();
 
-        $min_age = $weight_records->count() > 0 ? $dob->diffInDays(new Carbon($weight_records[0]->day)) : 0;
-        $max_age = $weight_records->count() > 0 ? $dob->diffInDays(new Carbon($weight_records[count($weight_records)-1]->day)) : 0;
+        $min_age = $dob->diffInDays(new Carbon($weight_records[0]->day));
+        $max_age = $dob->diffInDays(new Carbon($weight_records[count($weight_records)-1]->day));
         $zscore_table = Utilities::getZScoreRange(
             $min_age - $weight_frequency,
             $max_age + $weight_frequency
         );
-        $current_zscores = count($zscore_table) > 0 ? $zscore_table[$max_age] : 0;
+        $current_zscores = $zscore_table[$max_age];
 
         $past_milestone = floor($age / 30) * 30;
         $next_milestone = ceil($age / 30) * 30;

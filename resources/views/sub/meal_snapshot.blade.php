@@ -12,6 +12,6 @@
         <label id="today-meal-total" class="display-3 text-info">{{ $meal }}</label>ml
     </div>
     <div class="col-6 text-center">
-        <label id="last-meal-value" class="display-3">{{ !empty($last_meal) ? $last_meal->value : "" }}</label>ml
+        <label id="last-meal-value" class="display-3">{{ $last_meal->value }}</label>ml
     </div>
 </div>
