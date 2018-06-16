@@ -51,7 +51,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://kimthu.dev'),
+    'url' => env('APP_URL', 'http://babytracker.com'),
 
     /*
     |--------------------------------------------------------------------------
@@ -64,7 +64,7 @@ return [
     |
     */
 
-    'timezone' => 'Asia/Ho_Chi_Minh',
+    'timezone' => 'America/New_York',
 
     /*
     |--------------------------------------------------------------------------
