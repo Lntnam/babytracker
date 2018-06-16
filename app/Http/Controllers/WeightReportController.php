@@ -28,7 +28,7 @@ class WeightReportController extends Controller
             $min_age - $weight_frequency,
             $max_age + $weight_frequency
         );
-        $current_zscores = count($zscore_table) > 0 ? $zscore_table[$max_age] : 0;W
+        $current_zscores = count($zscore_table) > 0 ? $zscore_table[$max_age] : 0;
 
         $past_milestone = floor($age / 30) * 30;
         $next_milestone = ceil($age / 30) * 30;
